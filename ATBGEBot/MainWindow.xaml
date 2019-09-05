@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="348" Width="328">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="143*"/>
+            <ColumnDefinition Width="255*"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Fill="BlanchedAlmond" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="44" Margin="10,10,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\twitterlogo.png">
+            <Image.OpacityMask>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF4C3535" Offset="1"/>
+                </LinearGradientBrush>
+            </Image.OpacityMask>
+        </Image>
+        <Image x:Name="image_Copy" HorizontalAlignment="Left" Height="44" Margin="10,54,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\instagramlogo.png"/>
+        <Label x:Name="twitterLabel" Content="Label" HorizontalAlignment="Left" Margin="90,18,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label x:Name="instagramLabel" Content="Label" HorizontalAlignment="Left" Margin="90,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+
     </Grid>
 </Window>

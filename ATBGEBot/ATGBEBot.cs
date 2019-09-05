@@ -23,8 +23,8 @@ namespace InstagramATBGEBot
 {
     class InstagramBot
     {
-        private const string username = "hlsmurf1";
-        private const string password = "Bluebunny1";
+        private string username = "hlsmurf1";
+        private string password = "Bluebunny1";
         private static UserSessionData user;
         private static IInstaApi api;
 
@@ -46,7 +46,7 @@ namespace InstagramATBGEBot
             return objectResponse;
         }
 
-        static void TakeImagesFromResults(Rootobject topToday)
+        public void TakeImagesFromResults(Rootobject topToday)
         {
             int resultAmnt = (int)topToday.data.children.GetLongLength(0);
             for (int i = 0; i < resultAmnt; i++)
@@ -63,7 +63,7 @@ namespace InstagramATBGEBot
                 user.UserName = username;
                 user.Password = password;
                 Login();
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
 
                 UploadPics(topToday);
 
