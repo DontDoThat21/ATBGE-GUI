@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="MainWindow" Height="348" Width="328">
+        Title="ATBGE Poster" Height="401.5" Width="328" FontFamily="Comic Sans MS">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="143*"/>
             <ColumnDefinition Width="255*"/>
         </Grid.ColumnDefinitions>
+        <Rectangle Fill="CadetBlue" Margin="10,103,10,10.5" Stroke="Black" Grid.ColumnSpan="2"/>
         <Rectangle Fill="BlanchedAlmond" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <Image x:Name="image" HorizontalAlignment="Left" Height="44" Margin="10,10,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\twitterlogo.png">
             <Image.OpacityMask>
@@ -21,8 +22,24 @@
             </Image.OpacityMask>
         </Image>
         <Image x:Name="image_Copy" HorizontalAlignment="Left" Height="44" Margin="10,54,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\instagramlogo.png"/>
-        <Label x:Name="twitterLabel" Content="Label" HorizontalAlignment="Left" Margin="90,18,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label x:Name="instagramLabel" Content="Label" HorizontalAlignment="Left" Margin="90,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label  x:Name="twitterLabel" FontFamily="Arial Black" Content="Label" HorizontalAlignment="Left" Margin="90,18,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Label x:Name="instagramLabel" FontFamily="Arial Black" Content="Label" HorizontalAlignment="Left" Margin="90,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Ellipse Grid.Column="1" Fill="Red" Height="25" Margin="0,19,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="twittDot" HorizontalAlignment="Right" Width="26"/>
+        <Ellipse Grid.Column="1" Fill="Red" Height="25" Margin="0,63,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="instaDot" HorizontalAlignment="Right" Width="26"/>
+        <RichTextBox Background="BlanchedAlmond" BorderBrush="Black" x:Name="richTextBox" Margin="10,314,10,10" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="RichTextBox"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <Label FontFamily="Comic Sans MS" x:Name="label" Content="Console" HorizontalAlignment="Left" Margin="10,282,0,0" VerticalAlignment="Top"/>
+        <Label FontSize="10" x:Name="uploadCountLabel" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="22,143,0,0" VerticalAlignment="Top" Height="26" Grid.ColumnSpan="2"/>
+        <Rectangle x:Name="imgCntnr" Fill="CadetBlue" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
+        <Button x:Name="btnImgNext" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" HorizontalAlignment="Left" Margin="110,222,0,0" Width="74" Height="20" VerticalAlignment="Top"/>
+        <Button x:Name="btnImgPrev" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" HorizontalAlignment="Left" Margin="40,222,0,0" Width="74" Height="20" VerticalAlignment="Top"/>
+        <Label x:Name="lastRunLabel" FontFamily="Arial Black" Content="Last Run At: NULL" HorizontalAlignment="Left" Margin="22,119,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="129"/>
+        <CheckBox x:Name="checkBox1" Content="Turn Me On" HorizontalAlignment="Left" Margin="22,222,0,0" VerticalAlignment="Top" Checked="Automation_Checked"/>
 
     </Grid>
 </Window>

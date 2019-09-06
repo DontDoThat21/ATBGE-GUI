@@ -8,32 +8,39 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Net;
 using System.Drawing;
-using InstaSharper;
-using InstaSharper.Classes;
-using InstaSharper.API;
-using InstaSharper.API.Builder;
-using InstaSharper.Logger;
-using System;
 using System.IO;
-using InstaSharper.Classes.Models;
 using System.Threading;
 using System.Drawing.Imaging;
+using InstagramApiSharp;
+using InstagramApiSharp.API;
+using InstagramApiSharp.Classes;
+using InstagramApiSharp.Enums;
+using InstagramApiSharp.Helpers;
+using InstagramApiSharp.Logger;
+using InstagramApiSharp.API.Builder;
+using InstagramApiSharp.Classes.Models;
 
 namespace InstagramATBGEBot
 {
-    class InstagramBot
+    public class InstagramBot
     {
-        private string username = "hlsmurf1";
-        private string password = "Bluebunny1";
-        private static UserSessionData user;
-        private static IInstaApi api;
+        private string igUsername = "hlsmurf1";
+        private string igPassword = "Bluebunny1";
+
+        public int lastSuccessPhotoCount;
+
+        //private static UserSessionData user;
+        private static IInstaApi InstaApi;
 
         public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit=5&t=day";
         public static List<Bitmap> photos = new List<Bitmap>();
+        public Rootobject results;
+        public static bool igLoginSuccess;
 
         public InstagramBot()
         {
-            Rootobject results = GetJsonForToday();
+
+            results = GetJsonForToday();
             TakeImagesFromResults(results);
         }
 
@@ -49,50 +56,70 @@ namespace InstagramATBGEBot
         public void TakeImagesFromResults(Rootobject topToday)
         {
             int resultAmnt = (int)topToday.data.children.GetLongLength(0);
+            int successfullPhotos = 0;
+            bool exists = System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+            DirectoryInfo dir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+
+            if (exists)
+            {
+                dir.Delete(true);
+            }
+            dir.Create();
+
             for (int i = 0; i < resultAmnt; i++)
             {
                 WebRequest request = WebRequest.Create(topToday.data.children[i].data.url);
                 WebResponse response = request.GetResponse();
                 System.IO.Stream responseStream =
                     response.GetResponseStream();
-                Bitmap photo = new Bitmap(responseStream);
+                Bitmap photo;
+                try
+                {
+                    photo = new Bitmap(responseStream);
+                    photos.Add(photo);
+                    photo.Save(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot\\" + "\\temp" + i.ToString() + ".jpg");
+                    successfullPhotos++;
+                }
+                catch (Exception)
+                {                   
+                }
                 //photo.Save("distortExamie" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
-                photos.Add(photo);
+                
+                Thread.Sleep(10);
 
-                user = new UserSessionData();
-                user.UserName = username;
-                user.Password = password;
-                Login();
-                Thread.Sleep(1000);
-
-                UploadPics(topToday);
-
-                Console.Read();
+                //UploadPics(topToday);
             }
+            lastSuccessPhotoCount = successfullPhotos;
+
         }
 
-        public static async void Login()
+        public async void InstagramLogin()
         {
-            api = InstaApiBuilder.CreateBuilder()
-                .SetUser(user)
-                .UseLogger(new DebugLogger(LogLevel.Exceptions))
-                .Build();
+            var userSession = new UserSessionData
+            {
+                UserName = igUsername,
+                Password = igPassword
+            };
 
-            var loginRequest = await api.LoginAsync();
-            if (loginRequest.Succeeded)
-                Console.WriteLine("Logged in successfully.");
-            else
-                Console.WriteLine("Error logging in!" + loginRequest.Info.Message);
+            InstaApi = InstaApiBuilder.CreateBuilder()
+                .SetUser(userSession)
+                .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                .SetRequestDelay(RequestDelay.FromSeconds(0, 1))
+                .Build();
         }
-        public static async void UploadPics(Rootobject pics)
+        public async void UploadPics(Rootobject pics)
         {
             int picsAmnt = (int)pics.data.children.GetLongLength(0);
             int width = 0;
             int height = 0;
 
+            UserSessionData user = new UserSessionData();
+            user.UserName = igUsername;
+            user.Password = igPassword;
+            InstagramLogin();
+
             for (int i = 0; i < picsAmnt; i++)
             {
-
                 WebRequest request = WebRequest.Create(pics.data.children[i].data.url);
                 WebResponse response = request.GetResponse();
                 System.IO.Stream responseStream =
@@ -101,12 +128,15 @@ namespace InstagramATBGEBot
                 width = photo.Width;
                 height = photo.Height;
 
-                photo.Save("exampleSaved1" + ".jpg", ImageFormat.Jpeg); // to debug local files saved
+                photo.Save("temp" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
                 //InstaImage img = new InstaImage(pics.data.children[i].data.url, width, height);
-                InstaImage img = new InstaImage(@"C:\Users\ttrub\Desktop\InstagramATBGEBot\InstagramATBGEBot\InstagramATBGEBot\bin\Debug\exampleSaved1.jpg",
+                InstaImageUpload img = new InstaImageUpload(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    + "\\ATBGEBot"
+                    + "\\temp" + i.ToString() + ".jpg"
+                    ,
                     width, height);
-                
-                var result = await api.UploadPhotoAsync(img, "Uploaded by: " + 
+
+                var result = await InstaApi.MediaProcessor.UploadPhotoAsync(img, "Uploaded by: " + // .UploadImage
                     pics.data.children[i].data.author + "; " +
                     pics.data.children[i].data.title);
 
