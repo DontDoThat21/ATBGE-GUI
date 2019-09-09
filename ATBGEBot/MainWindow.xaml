@@ -5,15 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="ATBGE Poster" Height="401.5" Width="328" FontFamily="Comic Sans MS">
+        Title="ATBGE Poster" Height="407.75" Width="382.5" FontFamily="Comic Sans MS">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="143*"/>
             <ColumnDefinition Width="255*"/>
         </Grid.ColumnDefinitions>
         <Rectangle Fill="CadetBlue" Margin="10,103,10,10.5" Stroke="Black" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="BlanchedAlmond" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="44" Margin="10,10,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\twitterlogo.png">
+        <Rectangle Fill="DarkOrange" Opacity=".8" Height="164" Stroke="Black" VerticalAlignment="Top" Margin="24,118,0.5,0"/>
+
+        <Rectangle Fill="Orange" Opacity=".75" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="88" Margin="10,10,0,0" VerticalAlignment="Top" Width="96" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\twitterlogo.png">
             <Image.OpacityMask>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
@@ -21,12 +23,8 @@
                 </LinearGradientBrush>
             </Image.OpacityMask>
         </Image>
-        <Image x:Name="image_Copy" HorizontalAlignment="Left" Height="44" Margin="10,54,0,0" VerticalAlignment="Top" Width="62" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\instagramlogo.png"/>
-        <Label  x:Name="twitterLabel" FontFamily="Arial Black" Content="Label" HorizontalAlignment="Left" Margin="90,18,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label x:Name="instagramLabel" FontFamily="Arial Black" Content="Label" HorizontalAlignment="Left" Margin="90,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Ellipse Grid.Column="1" Fill="Red" Height="25" Margin="0,19,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="twittDot" HorizontalAlignment="Right" Width="26"/>
-        <Ellipse Grid.Column="1" Fill="Red" Height="25" Margin="0,63,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="instaDot" HorizontalAlignment="Right" Width="26"/>
-        <RichTextBox Background="BlanchedAlmond" BorderBrush="Black" x:Name="richTextBox" Margin="10,314,10,10" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
+        <Ellipse Grid.Column="1" Fill="Red" Height="42" Margin="0,30,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="twittDot" HorizontalAlignment="Right" Width="42"/>
+        <RichTextBox Background="Orange" Opacity=".75" BorderBrush="Black" x:Name="richTextBox" Margin="10,314,10,10" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
@@ -34,12 +32,46 @@
             </FlowDocument>
         </RichTextBox>
         <Label FontFamily="Comic Sans MS" x:Name="label" Content="Console" HorizontalAlignment="Left" Margin="10,282,0,0" VerticalAlignment="Top"/>
-        <Label FontSize="10" x:Name="uploadCountLabel" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="22,143,0,0" VerticalAlignment="Top" Height="26" Grid.ColumnSpan="2"/>
+        <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="39.5,247,0,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Width="177"/>
         <Rectangle x:Name="imgCntnr" Fill="CadetBlue" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
-        <Button x:Name="btnImgNext" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" HorizontalAlignment="Left" Margin="110,222,0,0" Width="74" Height="20" VerticalAlignment="Top"/>
-        <Button x:Name="btnImgPrev" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" HorizontalAlignment="Left" Margin="40,222,0,0" Width="74" Height="20" VerticalAlignment="Top"/>
-        <Label x:Name="lastRunLabel" FontFamily="Arial Black" Content="Last Run At: NULL" HorizontalAlignment="Left" Margin="22,119,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="129"/>
-        <CheckBox x:Name="checkBox1" Content="Turn Me On" HorizontalAlignment="Left" Margin="22,222,0,0" VerticalAlignment="Top" Checked="Automation_Checked"/>
+        <Button x:Name="btnImgNext" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90"/>
+        <Button x:Name="btnImgPrev" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <Label x:Name="lastRunLabel" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Turned on at: NULL" Margin="106,10,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="postImagesCBox" HorizontalContentAlignment="Center" Content="Auto Posting" Margin="36,258,1,0" VerticalAlignment="Top" Checked="Automation_Checked" Height="19"/>
+        <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Not logged in" Margin="106,48,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="startTCBox" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19" Text="08:00:00">
+            <ComboBoxItem>05:00:00</ComboBoxItem>
+            <ComboBoxItem>06:00:00</ComboBoxItem>
+            <ComboBoxItem>07:00:00</ComboBoxItem>
+            <ComboBoxItem>08:00:00</ComboBoxItem>
+            <ComboBoxItem>09:00:00</ComboBoxItem>
+            <ComboBoxItem>10:00:00</ComboBoxItem>
+            <ComboBoxItem>11:00:00</ComboBoxItem>
+            <ComboBoxItem>12:00:00</ComboBoxItem>
+            <ComboBoxItem>13:00:00</ComboBoxItem>
+            <ComboBoxItem>14:00:00</ComboBoxItem>
+            <ComboBoxItem>15:00:00</ComboBoxItem>
+        </ComboBox>
+        <ComboBox x:Name="endTCBox" Margin="36,188,10,0" FontSize="10" HorizontalContentAlignment="Center"  VerticalAlignment="Top" Height="19" Text="16:00:00">
+            <ComboBoxItem>12:00:00</ComboBoxItem>
+            <ComboBoxItem>13:00:00</ComboBoxItem>
+            <ComboBoxItem>14:00:00</ComboBoxItem>
+            <ComboBoxItem>15:00:00</ComboBoxItem>
+            <ComboBoxItem>16:00:00</ComboBoxItem>
+            <ComboBoxItem>17:00:00</ComboBoxItem>
+            <ComboBoxItem>18:00:00</ComboBoxItem>
+            <ComboBoxItem>19:00:00</ComboBoxItem>
+            <ComboBoxItem>20:00:00</ComboBoxItem>
+            <ComboBoxItem>21:00:00</ComboBoxItem>
+            <ComboBoxItem>22:00:00</ComboBoxItem>
+            <ComboBoxItem>23:00:00</ComboBoxItem>
+            <ComboBoxItem>24:00:00</ComboBoxItem>
+        </ComboBox>
+
+        <Label x:Name="startTLabel" Content="Start Time" HorizontalContentAlignment="Center" Margin="36,127,10,0" VerticalAlignment="Top"/>
+        <Label x:Name="endTLabel" Content="End Time" HorizontalContentAlignment="Center" Margin="36,167,10,0" VerticalAlignment="Top"/>
+        <Label x:Name="totalTopLabel" Content="Total Pics Posted" HorizontalContentAlignment="Center" Margin="24,207,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="totalPicTBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontSize="9.5" Height="14" Margin="36,228,10,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" RenderTransformOrigin="0.521,-0.311" TextChanged="TotalPicTBox_TextChanged"/>
 
     </Grid>
 </Window>

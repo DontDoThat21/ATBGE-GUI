@@ -13,12 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using InstagramApiSharp;
-using InstagramApiSharp.API;
-using InstagramApiSharp.Classes;
-using InstagramApiSharp.Enums;
-using InstagramApiSharp.Helpers;
-using InstagramApiSharp.Logger;
+using System.Threading;
 
 namespace ATBGEBot
 {
@@ -27,8 +22,10 @@ namespace ATBGEBot
     /// </summary>
     public partial class MainWindow : Window
     {
+        TwitterBot twtr;
         public MainWindow()
         {
+           
             InitializeComponent();
         }
 
@@ -37,9 +34,53 @@ namespace ATBGEBot
             CheckBox cb = (CheckBox)sender;
             if (cb.IsChecked == true)
             {
-                InstagramBot ig = new InstagramBot();
-                ig.UploadPics(ig.results);
-                uploadCountLabel.Content = "Photos uploaded: " + ig.lastSuccessPhotoCount.ToString();
+                twtr = new TwitterBot(totalPicTBox.Text);
+                twtr.TwitterLogin();
+                twittDot.Fill = Brushes.Green;
+                twitterLabel.Content = "Logged into Twitter.";
+                twtr.UploadPics(twtr.results);
+
+            }
+        }
+
+        private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Check if last character was a letter or 0. If so, undo.
+            var txtBox = (TextBox)sender;
+            string newText = txtBox.Text.ToString();
+            try
+            {
+                if (newText.Substring(newText.Length-1, 1) == "1"
+                    || newText.Substring(newText.Length - 1, 1) == "2" 
+                    || newText.Substring(newText.Length - 1, 1) == "3" 
+                    || newText.Substring(newText.Length - 1, 1) == "4" 
+                    || newText.Substring(newText.Length - 1, 1) == "5" 
+                    || newText.Substring(newText.Length - 1, 1) == "6" 
+                    || newText.Substring(newText.Length - 1, 1) == "7" 
+                    || newText.Substring(newText.Length - 1, 1) == "8" 
+                    || newText.Substring(newText.Length - 1, 1) == "9")
+                {
+                    // Verify its still a number.
+                    int worked;
+                    int.TryParse(newText, out worked);                    
+                    if (worked == 0)
+                    {
+                        // 0 means it isnt a number.
+                        totalPicTBox.Text = "";
+                    }
+                    if (newText.Length > 2)
+                    {
+                        totalPicTBox.Text = newText.Substring(0, 2);
+                    }
+                }
+                else
+                {
+                    totalPicTBox.Text = txtBox.Text.Substring(0, txtBox.Text.Length - 1);
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                totalPicTBox.Text = "";
             }
         }
     }
