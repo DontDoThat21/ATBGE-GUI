@@ -107,21 +107,24 @@ namespace InstagramATBGEBot
         {
             service = new TwitterService(customerKey, customerSecret, access_token, access_token_secret);
         }
-        public void UploadPics(Rootobject pics)
+        public string UploadPics(Rootobject pics, DateTime startT, DateTime endT)
         {
             int picsAmnt = imageList.Count;
             int width = 0;
             int height = 0;
+            string errConsoleOutPut = "";
 
             for (int i = 0; i < imageList.Count; i++)
             {
+                //UploadDelayHelper(startT, endT);
+
                 try
                 {
                     if (pics.data.children[i].data.url.Contains("imgur"))
                     {
                         pics.data.children[i].data.url = pics.data.children[i].data.url.Insert(8, "i.");
                         pics.data.children[i].data.url = pics.data.children[i].data.url + ".jpg";
-                        WebRequest imgurRequest = WebRequest.Create(pics.data.children[i].data.url);
+                        WebRequest imgurRequest = WebRequest.Create(pics.data.children[i].data.url); 
                     }
                 }
                 catch (Exception)
@@ -138,33 +141,56 @@ namespace InstagramATBGEBot
                     photo = new Bitmap(responseStream);
                     width = photo.Width;
                     height = photo.Height;
-                    photo.Save("temp" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
+                    photo.Save("jargobargo" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.");
                 }                
 
-
-
-                //Bitmap bm = new Bitmap(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                //    + "\\ATBGEBot" + "\\temp" + i.ToString() + ".jpg");
                 using (var stream = new FileStream(imageList[i], FileMode.Open))
                 {
-                    service.SendTweetWithMedia(new SendTweetWithMediaOptions
+                    try
                     {
-                        Status = pics.data.children[i].data.title + "; Uploaded by " + pics.data.children[i].data.author + ". https://www.reddit.com/r/ATBGE/",
-                        Images = new Dictionary<string, Stream> { { imageList[i], stream } },
-                        PossiblySensitive = pics.data.children[i].data.over_18
-                    });
+                        service.SendTweetWithMedia(new SendTweetWithMediaOptions
+                        {
+                            Status = pics.data.children[i].data.title + "; Uploaded by " + pics.data.children[i].data.author + ". https://www.reddit.com/r/ATBGE/",
+                            Images = new Dictionary<string, Stream> { { imageList[i], stream } },
+                            PossiblySensitive = pics.data.children[i].data.over_18
+                        });
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        errConsoleOutPut += ("Null reference error when uploading reddit.com" + pics.data.children[i].data.permalink) + "\n";
+                        errConsoleOutPut += $"Is_video: {pics.data.children[i].data.is_video}; \n";
+                        errConsoleOutPut += $"Trying to post this local file: {imageList[i]} \n";
+                    }
                 }
                 // Now we wait X hours until posting next picture.
                 //await Task.Delay(10000);
                 successUploads++;
-            }
+                Thread.Sleep(1000); // ? why
 
+            }
+            return errConsoleOutPut;
         }
 
+        private async void UploadDelayHelper(DateTime startT, DateTime endT)
+        {
+            if (startT > DateTime.Now)
+            {
+                startT = DateTime.Now;
+            }
+            TimeSpan total = (endT - startT);
+            Double hoursBetween = total.TotalHours; // hours between start and end time of selected values.
+            if (hoursBetween < 0 && hoursBetween != 0) // if they selected stupid before and after times.. inverse the negative number.
+            {
+                hoursBetween = (hoursBetween * -1); // make the neg a pos.
+            }
+            double rate = (hoursBetween / imageList.Count); // how often were going to post a picture.
+            int closestVal = (int)(3600000 * rate);
+            await Task.Delay(0); // closestVal
+        }
     }
 
 }
