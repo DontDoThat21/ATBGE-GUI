@@ -1,20 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using System.Net;
 using System.Drawing;
-using System.IO;
-using System.Threading;
 using System.Drawing.Imaging;
-using TweetSharp;
-using System.Diagnostics;
-using System.Timers;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Windows;
+using TweetSharp;
+using System.Timers;
 
 namespace InstagramATBGEBot
 {
@@ -30,10 +25,12 @@ namespace InstagramATBGEBot
         private int imageId = 0;
         private int successUploads = 0;
         private List<string> imageList = new List<string>();
-
+        private System.Timers.Timer aTimer;
         public TwitterService service;
 
         public int lastSuccessPhotoCount;
+        public int timeBetween;
+        public int imageIndex = 0;
 
         public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day
         public static List<Bitmap> photos = new List<Bitmap>();
@@ -46,9 +43,9 @@ namespace InstagramATBGEBot
 
             results = GetJsonForToday(picCnt);
             TakeImagesFromResults(results);
-
-
         }
+
+
 
         static Rootobject GetJsonForToday(string getPicCnt)
         {
@@ -93,11 +90,6 @@ namespace InstagramATBGEBot
                 catch (Exception)
                 {                   
                 }
-                //photo.Save("distortExamie" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
-                
-                Thread.Sleep(10);
-
-                //UploadPics(topToday);
             }
             lastSuccessPhotoCount = successfullPhotos;
 
@@ -114,10 +106,14 @@ namespace InstagramATBGEBot
             int height = 0;
             string errConsoleOutPut = "";
 
+            UploadDelaySet(startT, endT);
+
             for (int i = 0; i < imageList.Count; i++)
             {
-                //UploadDelayHelper(startT, endT);
-
+                if (i > 0)
+                {
+                    TimerHelper();
+                }
                 try
                 {
                     if (pics.data.children[i].data.url.Contains("imgur"))
@@ -129,7 +125,7 @@ namespace InstagramATBGEBot
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Imgur link was not an image. Canceling upload.");
+                     errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
                 }
                 Bitmap photo;
                 try
@@ -145,7 +141,7 @@ namespace InstagramATBGEBot
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.");
+                    errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
                 }                
 
                 using (var stream = new FileStream(imageList[i], FileMode.Open))
@@ -166,16 +162,13 @@ namespace InstagramATBGEBot
                         errConsoleOutPut += $"Trying to post this local file: {imageList[i]} \n";
                     }
                 }
-                // Now we wait X hours until posting next picture.
-                //await Task.Delay(10000);
                 successUploads++;
-                Thread.Sleep(1000); // ? why
-
             }
+            imageIndex++;
             return errConsoleOutPut;
         }
 
-        private async void UploadDelayHelper(DateTime startT, DateTime endT)
+        public void UploadDelaySet(DateTime startT, DateTime endT)
         {
             if (startT > DateTime.Now)
             {
@@ -187,10 +180,29 @@ namespace InstagramATBGEBot
             {
                 hoursBetween = (hoursBetween * -1); // make the neg a pos.
             }
-            double rate = (hoursBetween / imageList.Count); // how often were going to post a picture.
-            int closestVal = (int)(3600000 * rate);
-            await Task.Delay(0); // closestVal
+            double rate = 0;
+            if (imageList.Count == 1)
+            {
+                rate = (hoursBetween / imageList.Count); // how often were going to post a picture.. only one picture so no rate?
+            }
+            else
+            {
+                rate = (hoursBetween / imageList.Count -1); // how often were going to post a picture.
+            }
+
+            int closestValRate = (int)(3600000 * rate);
+            timeBetween = closestValRate;
+            //Thread.Sleep(closestVal);
+            //await Task.Delay(closestVal); // closestVal
         }
+
+        public void TimerHelper(int imageIndexNum)
+        {
+            aTimer = new System.Timers.Timer();
+            aTimer.Interval = (timeBetween);//timeBetween;
+            aTimer.Elapsed +=
+        }
+
     }
 
 }

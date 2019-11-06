@@ -24,6 +24,7 @@ namespace ATBGEBot
     public partial class MainWindow : Window
     {
         TwitterBot twtr;
+        public int uithrdImageCount = 0;
         public MainWindow()
         {
            
@@ -36,30 +37,31 @@ namespace ATBGEBot
             if (cb.IsChecked == true)
             {
                 twtr = new TwitterBot(totalPicTBox.Text);
-                //twtr.TwitterLogin();
-               // twittDot.Fill = Brushes.Green;
-                //twitterLabel.Content = "Logged into Twitter.";
-                // twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text))
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += Worker_DoWork;
-                worker.RunWorkerCompleted += Worker_Completed;
-                //worker.RunWorkerAsync();
+                twtr.TwitterLogin();
+                twittDot.Fill = Brushes.Green;
+                twitterLabel.Content = "Logged into Twitter.";
+                twtr.UploadDelaySet(DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), int.Parse(totalPicTBox.Text));
                 twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+                //BackgroundWorker worker = new BackgroundWorker();
+                //worker.DoWork += Worker_DoWork;
+                //worker.RunWorkerCompleted += Worker_Completed;
+                //worker.RunWorkerAsync();
+                //twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
             }
         }
 
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            this.Dispatcher.Invoke(() =>
-                    twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text))
-                );
-            // This is calling a global var of an instantiated class that has a method to upload pictures to twitter.
+        //private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        //{
+        //    this.Dispatcher.Invoke(() =>
+        //            twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text))
+        //        );
+        //    // This is calling a global var of an instantiated class that has a method to upload pictures to twitter.
 
-        }
-        private void Worker_Completed(object sender, RunWorkerCompletedEventArgs e)
-        {
-            MessageBox.Show("Completed the work/uploads.");
-        }
+        //}
+        //private void Worker_Completed(object sender, RunWorkerCompletedEventArgs e)
+        //{
+        //    consoleTBox.AppendText("Completed the work/uploads. \n"); // Add output to the console notifying of completion.
+        //}
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
         {

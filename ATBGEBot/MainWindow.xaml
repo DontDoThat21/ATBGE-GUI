@@ -24,7 +24,7 @@
             </Image.OpacityMask>
         </Image>
         <Ellipse Grid.Column="1" Fill="Red" Height="42" Margin="0,30,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="twittDot" HorizontalAlignment="Right" Width="42"/>
-        <RichTextBox Background="Orange" Opacity=".75" BorderBrush="Black" x:Name="richTextBox" Margin="10,314,10,10" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
+        <RichTextBox Background="Orange" Opacity=".75" BorderBrush="Black" x:Name="consoleTBox" Margin="10,314,10,10" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
