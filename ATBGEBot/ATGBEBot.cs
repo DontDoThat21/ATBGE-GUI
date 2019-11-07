@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using TweetSharp;
 using System.Timers;
+using Microsoft.Win32;
 
 namespace InstagramATBGEBot
 {
@@ -37,6 +38,7 @@ namespace InstagramATBGEBot
         public Rootobject results;
         public bool twtrLognSuccess = false;
 
+        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
 
         public TwitterBot(string picCnt)
         {
@@ -52,8 +54,17 @@ namespace InstagramATBGEBot
             Uri reddit = new Uri(redditWorkingUrl + getPicCnt + "&t=day");
             HttpClient client = new HttpClient();
             string json = new WebClient().DownloadString(reddit);
-            Rootobject objectResponse = JsonConvert.DeserializeObject<Rootobject>(json);
-            return objectResponse;
+            Rootobject objectResponse;
+            try
+            {
+                objectResponse = JsonConvert.DeserializeObject<Rootobject>(json);
+                return objectResponse;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}, sorry scrub.");
+            }
+            return null;
         }
 
         public void TakeImagesFromResults(Rootobject topToday)
@@ -99,20 +110,25 @@ namespace InstagramATBGEBot
         {
             service = new TwitterService(customerKey, customerSecret, access_token, access_token_secret);
         }
-        public string UploadPics(Rootobject pics, DateTime startT, DateTime endT)
+        public int UploadPics(int totalPics, Rootobject pics, DateTime startT, DateTime endT)
         {
+            DateTime[] dates = UploadDelaySet(totalPics, startT, endT);
+            for(int i = 0; i < dates.Length; i++)
+            {
+                key.SetValue($"UploadDate{i}", $"{dates[i]}");
+            }
+
             int picsAmnt = imageList.Count;
             int width = 0;
             int height = 0;
             string errConsoleOutPut = "";
-
-            UploadDelaySet(startT, endT);
+            
 
             for (int i = 0; i < imageList.Count; i++)
             {
                 if (i > 0)
                 {
-                    TimerHelper();
+                    //TimerHelper();
                 }
                 try
                 {
@@ -165,11 +181,12 @@ namespace InstagramATBGEBot
                 successUploads++;
             }
             imageIndex++;
-            return errConsoleOutPut;
+            return imageList.Count;
         }
 
-        public void UploadDelaySet(DateTime startT, DateTime endT)
+        public DateTime[] UploadDelaySet(int totalPics, DateTime startT, DateTime endT)
         {
+            DateTime[] timesToPost = new DateTime[imageList.Count];
             if (startT > DateTime.Now)
             {
                 startT = DateTime.Now;
@@ -187,11 +204,34 @@ namespace InstagramATBGEBot
             }
             else
             {
-                rate = (hoursBetween / imageList.Count -1); // how often were going to post a picture.
+                rate = 1.0; //(hoursBetween / totalPics); // how often were going to post a picture.
+                //rate += (rate / imageList.Count);
+                int notImageCount = totalPics - imageList.Count;
+                //int whateverTheFuckThisIs = notImageCount / 
+                //double rateToMultipleRateBy = (double)totalPics / (double)imageList.Count;
+                //rate = rateToMultipleRateBy * rate;
+
+
             }
 
             int closestValRate = (int)(3600000 * rate);
             timeBetween = closestValRate;
+
+            DateTime postAt;
+            for (double i = 0; i < imageList.Count; i++)
+            {
+                if (i == 0)
+                {
+                    postAt = startT;
+                    timesToPost[(int)i] = postAt;
+                }
+                else
+                {
+                    postAt = startT.AddHours(i * rate);
+                    timesToPost[(int)i] = postAt;
+                }
+            }
+            return timesToPost;
             //Thread.Sleep(closestVal);
             //await Task.Delay(closestVal); // closestVal
         }
@@ -200,7 +240,7 @@ namespace InstagramATBGEBot
         {
             aTimer = new System.Timers.Timer();
             aTimer.Interval = (timeBetween);//timeBetween;
-            aTimer.Elapsed +=
+            //aTimer.Elapsed +=
         }
 
     }

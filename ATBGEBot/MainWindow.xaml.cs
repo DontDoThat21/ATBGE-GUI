@@ -40,28 +40,10 @@ namespace ATBGEBot
                 twtr.TwitterLogin();
                 twittDot.Fill = Brushes.Green;
                 twitterLabel.Content = "Logged into Twitter.";
-                twtr.UploadDelaySet(DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), int.Parse(totalPicTBox.Text));
-                twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
-                //BackgroundWorker worker = new BackgroundWorker();
-                //worker.DoWork += Worker_DoWork;
-                //worker.RunWorkerCompleted += Worker_Completed;
-                //worker.RunWorkerAsync();
-                //twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+                int totalUploads = twtr.UploadPics(int.Parse(totalPicTBox.Text), twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+                panelTimeChildAdd(totalUploads); // Generating text box's now.
             }
-        }
-
-        //private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    this.Dispatcher.Invoke(() =>
-        //            twtr.UploadPics(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text))
-        //        );
-        //    // This is calling a global var of an instantiated class that has a method to upload pictures to twitter.
-
-        //}
-        //private void Worker_Completed(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    consoleTBox.AppendText("Completed the work/uploads. \n"); // Add output to the console notifying of completion.
-        //}
+        }        
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -70,7 +52,8 @@ namespace ATBGEBot
             string newText = txtBox.Text.ToString();
             try
             {
-                if (newText.Substring(newText.Length-1, 1) == "1"
+                if (newText.Substring(newText.Length - 1, 1) == "0" 
+                    || newText.Substring(newText.Length-1, 1) == "1"
                     || newText.Substring(newText.Length - 1, 1) == "2" 
                     || newText.Substring(newText.Length - 1, 1) == "3" 
                     || newText.Substring(newText.Length - 1, 1) == "4" 
@@ -101,6 +84,27 @@ namespace ATBGEBot
             catch (ArgumentOutOfRangeException)
             {
                 totalPicTBox.Text = "";
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            panelTimeChildAdd(1);  // add one for now..          
+        }
+
+        private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
+        {
+            for (int i = 0; i < uploadCount; i++)
+            {
+                Label lbl = new Label();
+                lbl.Content = "AFRICA - TOTO"; // This should be a registry call.
+                lbl.BorderBrush = Brushes.White;
+                lbl.BorderThickness = new Thickness(1, 1, 1, 1);
+                lbl.Width = postTimesPanel.ActualWidth;
+                lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
+
+                postTimesPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                postTimesPanel.Children.Add(lbl);
             }
         }
     }
