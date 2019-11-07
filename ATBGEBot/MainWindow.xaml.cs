@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
 using System.ComponentModel;
+using Microsoft.Win32;
 
 namespace ATBGEBot
 {
@@ -89,22 +90,31 @@ namespace ATBGEBot
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            panelTimeChildAdd(1);  // add one for now..          
+            panelTimeChildAdd(4);  // add one for now..          
         }
 
         private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
         {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
+
             for (int i = 0; i < uploadCount; i++)
             {
                 Label lbl = new Label();
-                lbl.Content = "AFRICA - TOTO"; // This should be a registry call.
+                lbl.Content = key.GetValue($"UploadDate{i}"); // This should be a registry call.
                 lbl.BorderBrush = Brushes.White;
                 lbl.BorderThickness = new Thickness(1, 1, 1, 1);
-                lbl.Width = postTimesPanel.ActualWidth;
+                lbl.Width = postTimesPanel.ActualWidth*.8; // Set the text control to 80%..
                 lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
+
+                Rectangle rct = new Rectangle();
+                rct.Width = postTimesPanel.ActualWidth * .2;
+                rct.Height = 200;
+                rct.Fill = Brushes.Green;
+
 
                 postTimesPanel.HorizontalAlignment = HorizontalAlignment.Left;
                 postTimesPanel.Children.Add(lbl);
+                OuterStackPanel.Children.Add(rct);
             }
         }
     }

@@ -75,7 +75,7 @@
         <Button Content="Debug" Grid.Column="1" Click="Button_Click" HorizontalAlignment="Left" Margin="114,287,0,0" VerticalAlignment="Top" Width="75"/>
         <Rectangle Fill="#FFF4F4F5" Stroke="DarkOrange" Grid.Column="1" Margin="0,314,10,11" HorizontalAlignment="Right" Width="153"/>
         <StackPanel Grid.Column="1" Background="Pink" x:Name="OuterStackPanel" Margin="0,337,11,12" HorizontalAlignment="Right" Width="151">
-            <StackPanel Background="Blue" x:Name="postTimesPanel" Height="94" Margin="10,0"/>
+            <StackPanel Background="White" x:Name="postTimesPanel" Height="94"/>
         </StackPanel>
         <TextBox x:Name="lblPostTimes" Grid.Column="1" BorderBrush="DarkOrange" TextAlignment="Center" Margin="0,314,10,0" TextWrapping="Wrap" Text="Upcoming Post Times:" HorizontalAlignment="Right" Width="153" Height="23" VerticalAlignment="Top"/>
 
