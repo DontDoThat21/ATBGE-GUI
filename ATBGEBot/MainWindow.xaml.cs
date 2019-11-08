@@ -99,23 +99,50 @@ namespace ATBGEBot
 
             for (int i = 0; i < uploadCount; i++)
             {
+                // --- Label Gen Section --- 
+                StackPanel spL = new StackPanel();
+                spL.Width = OuterStackPanel.ActualWidth;
+
                 Label lbl = new Label();
                 lbl.Content = key.GetValue($"UploadDate{i}"); // This should be a registry call.
-                lbl.BorderBrush = Brushes.White;
+                lbl.BorderBrush = Brushes.Black;
                 lbl.BorderThickness = new Thickness(1, 1, 1, 1);
-                lbl.Width = postTimesPanel.ActualWidth*.8; // Set the text control to 80%..
+                lbl.Width = OuterStackPanel.ActualWidth*.8; // Set the text control to 80%..
+                lbl.Height = 35;
+                lbl.Padding = new Thickness(10);
+                lbl.Background = Brushes.CadetBlue;
                 lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
 
+                spL.VerticalAlignment = VerticalAlignment.Top;
+                spL.Margin = new Thickness(1, 0, 0, 0);
+                spL.Children.Add(lbl);
+                spL.Background = Brushes.White;
+
+                // OuterStackPanel.Background = Brushes.LightGoldenrodYellow; // ???
+
+                // --- Rectangle Section ---
+                StackPanel spR = new StackPanel();
+                spR.Width = OuterStackPanel.ActualWidth;
+
                 Rectangle rct = new Rectangle();
-                rct.Width = postTimesPanel.ActualWidth * .2;
-                rct.Height = 200;
+                rct.Width = OuterStackPanel.ActualWidth * .2;
+                rct.Height = 20;
+                rct.Stroke = Brushes.Black;
+                rct.StrokeThickness = 1;
                 rct.Fill = Brushes.Green;
 
+                spR.VerticalAlignment = VerticalAlignment.Center;
+                spR.Margin = new Thickness(1, 0, 0, 0);
+                spR.Children.Add(rct);
+                spR.Background = Brushes.White;
 
-                postTimesPanel.HorizontalAlignment = HorizontalAlignment.Left;
-                postTimesPanel.Children.Add(lbl);
-                OuterStackPanel.Children.Add(rct);
+                //OuterStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                //OuterStackPanel.Children.Add(lbl);
+                OuterStackPanel.Children.Add(spL);
+                OuterStackPanel.Children.Add(spR);
+
             }
+
         }
     }
 }
