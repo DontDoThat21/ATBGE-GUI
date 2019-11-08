@@ -107,7 +107,7 @@ namespace ATBGEBot
                 lbl.Content = key.GetValue($"UploadDate{i}"); // This should be a registry call.
                 lbl.BorderBrush = Brushes.Black;
                 lbl.BorderThickness = new Thickness(1, 1, 1, 1);
-                lbl.Width = OuterStackPanel.ActualWidth*.8; // Set the text control to 80%..
+                lbl.Width = OuterStackPanel.ActualWidth*.8; // Set the text control to 80%.. 
                 lbl.Height = 35;
                 lbl.Padding = new Thickness(10);
                 lbl.Background = Brushes.CadetBlue;
