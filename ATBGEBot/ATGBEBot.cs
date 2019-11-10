@@ -11,6 +11,7 @@ using System.Windows;
 using TweetSharp;
 using System.Timers;
 using Microsoft.Win32;
+using ATBGEBot;
 
 namespace InstagramATBGEBot
 {
@@ -38,6 +39,8 @@ namespace InstagramATBGEBot
         public Rootobject results;
         public bool twtrLognSuccess = false;
 
+        static List<Post> posts = new List<Post>();
+
         RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
 
         public TwitterBot(string picCnt)
@@ -57,7 +60,16 @@ namespace InstagramATBGEBot
             Rootobject objectResponse;
             try
             {
+                Post redditPost = new Post();
                 objectResponse = JsonConvert.DeserializeObject<Rootobject>(json);
+                foreach (var item in objectResponse.data.children)
+                {
+                    Post post = new Post();
+                    post.author = item.data.author;
+                    post.is_video = item.data.is_video;
+                    post.url = item.data.url;
+                    posts.Add(post);
+                }
                 return objectResponse;
             }
             catch (Exception ex)
@@ -87,8 +99,7 @@ namespace InstagramATBGEBot
             {
                 WebRequest request = WebRequest.Create(topToday.data.children[i].data.url);                
                 WebResponse response = request.GetResponse();
-                System.IO.Stream responseStream =
-                    response.GetResponseStream();
+                System.IO.Stream responseStream = response.GetResponseStream();
                 Bitmap photo;
                 try
                 {

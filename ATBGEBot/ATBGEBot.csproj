@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="PictureProcessor.cs" />
     <Compile Include="ATGBEbot.cs" />
+    <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

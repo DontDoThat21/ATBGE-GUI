@@ -11,7 +11,14 @@
             <ColumnDefinition Width="143*"/>
             <ColumnDefinition Width="255*"/>
         </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" Margin="0,337,10,11" HorizontalAlignment="Right" Width="153" Background="Purple">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="133*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
         <Rectangle Fill="CadetBlue" Margin="10,103,10,10.5" Stroke="Black" Grid.ColumnSpan="2"/>
+        <Rectangle Fill="#FFF4F4F5" Stroke="Black" Margin="0,337,10,11" Grid.Column="1" HorizontalAlignment="Right" Width="153"/>
         <Rectangle Fill="DarkOrange" Opacity=".8" Height="164" Stroke="Black" VerticalAlignment="Top" Margin="24,118,0.5,0"/>
 
         <Rectangle Fill="Orange" Opacity=".75" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
@@ -27,45 +34,44 @@
         <RichTextBox Background="Orange" Opacity=".75" BorderBrush="DarkOrange" x:Name="consoleTBox" Margin="10,314,163,11" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="RichTextBox"/>
+                    <Run Text="Timer"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
         <Label FontFamily="Comic Sans MS" x:Name="label" Content="Console" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top"/>
         <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="39.5,247,0,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Width="177"/>
-        <Rectangle x:Name="imgCntnr" Fill="CadetBlue" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
+        <Rectangle x:Name="imgCntr" Fill="CadetBlue" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
         <Button x:Name="btnImgNext" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90"/>
         <Button x:Name="btnImgPrev" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
         <Label x:Name="lastRunLabel" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Turned on at: NULL" Margin="106,10,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <CheckBox x:Name="postImagesCBox" HorizontalContentAlignment="Center" Content="Auto Posting" Margin="36,258,1,0" VerticalAlignment="Top" Checked="Automation_Checked" Height="19"/>
         <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Not logged in" Margin="106,48,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="startTCBox" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19" Text="08:00:00">
-            <ComboBoxItem>05:00:00</ComboBoxItem>
-            <ComboBoxItem>06:00:00</ComboBoxItem>
-            <ComboBoxItem>07:00:00</ComboBoxItem>
-            <ComboBoxItem>08:00:00</ComboBoxItem>
-            <ComboBoxItem>09:00:00</ComboBoxItem>
-            <ComboBoxItem>10:00:00</ComboBoxItem>
-            <ComboBoxItem>11:00:00</ComboBoxItem>
-            <ComboBoxItem>12:00:00</ComboBoxItem>
-            <ComboBoxItem>13:00:00</ComboBoxItem>
-            <ComboBoxItem>14:00:00</ComboBoxItem>
-            <ComboBoxItem>15:00:00</ComboBoxItem>
+            <ComboBoxItem Content="05:00:00"/>
+            <ComboBoxItem Content="06:00:00"/>
+            <ComboBoxItem Content="07:00:00"/>
+            <ComboBoxItem Content="08:00:00"/>
+            <ComboBoxItem Content="09:00:00"/>
+            <ComboBoxItem Content="10:00:00"/>
+            <ComboBoxItem Content="11:00:00"/>
+            <ComboBoxItem Content="12:00:00"/>
+            <ComboBoxItem Content="13:00:00"/>
+            <ComboBoxItem Content="14:00:00"/>
+            <ComboBoxItem Content="15:00:00"/>
         </ComboBox>
         <ComboBox x:Name="endTCBox" Margin="36,188,10,0" FontSize="10" HorizontalContentAlignment="Center"  VerticalAlignment="Top" Height="19" Text="16:00:00">
-            <ComboBoxItem>12:00:00</ComboBoxItem>
-            <ComboBoxItem>13:00:00</ComboBoxItem>
-            <ComboBoxItem>14:00:00</ComboBoxItem>
-            <ComboBoxItem>15:00:00</ComboBoxItem>
-            <ComboBoxItem>16:00:00</ComboBoxItem>
-            <ComboBoxItem>17:00:00</ComboBoxItem>
-            <ComboBoxItem>18:00:00</ComboBoxItem>
-            <ComboBoxItem>19:00:00</ComboBoxItem>
-            <ComboBoxItem>20:00:00</ComboBoxItem>
-            <ComboBoxItem>21:00:00</ComboBoxItem>
-            <ComboBoxItem>22:00:00</ComboBoxItem>
-            <ComboBoxItem>23:00:00</ComboBoxItem>
-            <ComboBoxItem>24:00:00</ComboBoxItem>
+            <ComboBoxItem Content="12:00:00"/>
+            <ComboBoxItem Content="13:00:00"/>
+            <ComboBoxItem Content="14:00:00"/>
+            <ComboBoxItem Content="15:00:00"/>
+            <ComboBoxItem Content="16:00:00"/>
+            <ComboBoxItem Content="17:00:00"/>
+            <ComboBoxItem Content="18:00:00"/>
+            <ComboBoxItem Content="19:00:00"/>
+            <ComboBoxItem Content="20:00:00"/>
+            <ComboBoxItem Content="21:00:00"/>
+            <ComboBoxItem Content="22:00:00"/>
+            <ComboBoxItem Content="23:00:00"/>
+            <ComboBoxItem Content="24:00:00"/>
         </ComboBox>
 
         <Label x:Name="startTLabel" Content="Start Time" HorizontalContentAlignment="Center" Margin="36,127,10,0" VerticalAlignment="Top"/>
@@ -74,14 +80,18 @@
         <TextBox x:Name="totalPicTBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontSize="9.5" Height="14" Margin="36,228,10,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" RenderTransformOrigin="0.521,-0.311" TextChanged="TotalPicTBox_TextChanged"/>
         <Button Content="Debug" Grid.Column="1" Click="Button_Click" HorizontalAlignment="Left" Margin="114,287,0,0" VerticalAlignment="Top" Width="75"/>
         <TextBox x:Name="lblPostTimes" Grid.Column="1" BorderBrush="DarkOrange" TextAlignment="Center" Margin="0,314,10,0" TextWrapping="Wrap" Text="Upcoming Post Times:" HorizontalAlignment="Right" Width="153" Height="23" VerticalAlignment="Top"/>
-        <Grid Grid.Column="1" Margin="0,337,10,11" HorizontalAlignment="Right" Width="153" Background="Purple">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="133*"/>
-                <ColumnDefinition Width="20*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Background="LawnGreen" x:Name="OuterStackPanel" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,7,0" Width="124" RenderTransformOrigin="0.5,0.5" Height="73">
-            </StackPanel>
-        </Grid>
+        <StackPanel  Orientation="Vertical" Margin="0,338,11,12" Background="White" x:Name="OuterStackPanel" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Width="151" Grid.Column="1">
+            <StackPanel.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-0.035"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </StackPanel.RenderTransform>
+        </StackPanel>
+        <Button x:Name="btnBegin" Content="Begin" HorizontalAlignment="Left" Margin="36,252,0,0" VerticalAlignment="Top" Width="75" Click="AutomationBegin"/>
+        <Image x:Name="imageBox" HorizontalAlignment="Left" Height="102" Margin="41,119,0,0" VerticalAlignment="Top" Width="150" Grid.Column="1"/>
 
     </Grid>
 </Window>

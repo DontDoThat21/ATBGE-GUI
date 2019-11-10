@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.ComponentModel;
 using Microsoft.Win32;
+using System.Net;
+using System.IO;
 
 namespace ATBGEBot
 {
@@ -25,26 +27,42 @@ namespace ATBGEBot
     public partial class MainWindow : Window
     {
         TwitterBot twtr;
+        public string tstingPuiblic;
         public int uithrdImageCount = 0;
         public MainWindow()
-        {
-           
+        {           
             InitializeComponent();
         }
 
-        private void Automation_Checked(object sender, RoutedEventArgs e)
+        private void AutomationBegin(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = (CheckBox)sender;
-            if (cb.IsChecked == true)
-            {
-                twtr = new TwitterBot(totalPicTBox.Text);
-                twtr.TwitterLogin();
-                twittDot.Fill = Brushes.Green;
-                twitterLabel.Content = "Logged into Twitter.";
-                int totalUploads = twtr.UploadPics(int.Parse(totalPicTBox.Text), twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
-                panelTimeChildAdd(totalUploads); // Generating text box's now.
-            }
-        }        
+            Button btn = (Button)sender;
+            twtr = new TwitterBot(totalPicTBox.Text);
+            twtr.TwitterLogin();
+            twittDot.Fill = Brushes.Green;
+            twitterLabel.Content = "Logged into Twitter.";
+            int totalUploads = twtr.UploadPics(int.Parse(totalPicTBox.Text), twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+            panelTimeChildAdd(totalUploads); // Generating text box's now.
+            
+            Image[] images = null; // new Image[totalUploads]; // image array returned.
+                        
+            PostTimerCheck();
+        }
+        
+        private void DownloadImagesFromUrls(string imageUrl)
+        {
+            System.Drawing.Image[] imagesReturned = null;
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(imageUrl);
+            webRequest.AllowWriteStreamBuffering = true;
+            webRequest.Timeout = 45000;
+
+            WebResponse webResponse = webRequest.GetResponse();
+
+            Stream stream = webResponse.GetResponseStream();
+
+            imagesReturned[0] = System.Drawing.Image.FromStream(stream);
+
+        }
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -104,45 +122,52 @@ namespace ATBGEBot
                 spL.Width = OuterStackPanel.ActualWidth;
 
                 Label lbl = new Label();
-                lbl.Content = key.GetValue($"UploadDate{i}"); // This should be a registry call.
+                string cast = (string)key.GetValue($"UploadDate{i}");
+                DateTime dVal = DateTime.Parse(cast);
+                lbl.Content = dVal.Month + "/" + dVal.Day + " " + dVal.TimeOfDay; // This should be a registry call.
                 lbl.BorderBrush = Brushes.Black;
                 lbl.BorderThickness = new Thickness(1, 1, 1, 1);
                 lbl.Width = OuterStackPanel.ActualWidth*.8; // Set the text control to 80%.. 
+                lbl.FontSize = 9;
                 lbl.Height = 35;
                 lbl.Padding = new Thickness(10);
                 lbl.Background = Brushes.CadetBlue;
                 lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
 
-                spL.VerticalAlignment = VerticalAlignment.Top;
-                spL.Margin = new Thickness(1, 0, 0, 0);
-                spL.Children.Add(lbl);
-                spL.Background = Brushes.White;
-
-                // OuterStackPanel.Background = Brushes.LightGoldenrodYellow; // ???
-
-                // --- Rectangle Section ---
-                StackPanel spR = new StackPanel();
-                spR.Width = OuterStackPanel.ActualWidth;
-
                 Rectangle rct = new Rectangle();
-                rct.Width = OuterStackPanel.ActualWidth * .2;
+                rct.Width = OuterStackPanel.ActualWidth * .15;
                 rct.Height = 20;
                 rct.Stroke = Brushes.Black;
                 rct.StrokeThickness = 1;
                 rct.Fill = Brushes.Green;
 
-                spR.VerticalAlignment = VerticalAlignment.Center;
-                spR.Margin = new Thickness(1, 0, 0, 0);
-                spR.Children.Add(rct);
-                spR.Background = Brushes.White;
+                spL.VerticalAlignment = VerticalAlignment.Center;
+                spL.Margin = new Thickness(2, 0, 5, 0);
+                spL.Background = Brushes.White;
+                spL.Orientation = Orientation.Horizontal;                
+                spL.Children.Add(lbl);
+                spL.Children.Add(rct);
 
                 //OuterStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
                 //OuterStackPanel.Children.Add(lbl);
                 OuterStackPanel.Children.Add(spL);
-                OuterStackPanel.Children.Add(spR);
-
             }
 
+        }
+
+        private void PostTimerCheck()
+        {
+            DateTime dt = DateTime.Parse(endTCBox.Text);
+            if (DateTime.Now >= dt)
+            {
+                // End..
+
+            }
+            else
+            {
+                consoleTBox.AppendText(Environment.NewLine + "Finished at:" + DateTime.Now);
+                PostTimerCheck();
+            }
         }
     }
 }
