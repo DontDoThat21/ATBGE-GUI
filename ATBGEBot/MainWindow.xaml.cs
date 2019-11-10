@@ -18,6 +18,7 @@ using System.ComponentModel;
 using Microsoft.Win32;
 using System.Net;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace ATBGEBot
 {
@@ -27,11 +28,13 @@ namespace ATBGEBot
     public partial class MainWindow : Window
     {
         TwitterBot twtr;
-        public string tstingPuiblic;
-        public int uithrdImageCount = 0;
+        List<System.Drawing.Image> glblImgs = new List<System.Drawing.Image>();
+        int imageIndex = -2;
+
         public MainWindow()
         {           
             InitializeComponent();
+            imageIndex = CheckForImage("BOOT");
         }
 
         private void AutomationBegin(object sender, RoutedEventArgs e)
@@ -43,25 +46,65 @@ namespace ATBGEBot
             twitterLabel.Content = "Logged into Twitter.";
             int totalUploads = twtr.UploadPics(int.Parse(totalPicTBox.Text), twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
             panelTimeChildAdd(totalUploads); // Generating text box's now.
+
+            List<string> urlsFromJson = new List<string>();
+
+            for (int i = 0; i < twtr.results.data.children.Length; i++)
+            {
+                urlsFromJson.Add(twtr.results.data.children[i].data.url);
+            }
+
+            SetGlobalImages(urlsFromJson);
+
             
-            Image[] images = null; // new Image[totalUploads]; // image array returned.
-                        
-            PostTimerCheck();
+
+
+            //PostTimerCheck();
         }
-        
-        private void DownloadImagesFromUrls(string imageUrl)
+
+        private void SetGlobalImages(List<string> urlsFromJson)
         {
-            System.Drawing.Image[] imagesReturned = null;
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(imageUrl);
-            webRequest.AllowWriteStreamBuffering = true;
-            webRequest.Timeout = 45000;
+            System.Drawing.Image[] images = DownloadImagesFromUrls(urlsFromJson); // new Image[totalUploads]; // image array returned.
+            if (images != null)
+            {
+                glblImgs = new List<System.Drawing.Image>();
+                foreach (System.Drawing.Image img in images)
+                    glblImgs.Add(img);
 
-            WebResponse webResponse = webRequest.GetResponse();
+                for (int i = 0; i < glblImgs.Count; i++)
+                {
+                    try
+                    {
+                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                        "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error setting image box source. Did we find a video? {ex.Message}");
+                    }
+                }
+            }
+        }
 
-            Stream stream = webResponse.GetResponseStream();
+        private System.Drawing.Image[] DownloadImagesFromUrls(List<string> urls)
+        {
+            System.Drawing.Image[] imagesReturned = new System.Drawing.Image[urls.Count];
 
-            imagesReturned[0] = System.Drawing.Image.FromStream(stream);
+            for (int i = 0; i < urls.Count; i++)
+            {
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(urls[0]);
+                webRequest.AllowWriteStreamBuffering = true;
+                webRequest.Timeout = 45000;
+                
+                WebResponse webResponse = webRequest.GetResponse();
+                
+                Stream stream = webResponse.GetResponseStream();
+                
+                imagesReturned[i] = System.Drawing.Image.FromStream(stream);
+            }            
 
+            
+            return imagesReturned;
         }
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -108,7 +151,7 @@ namespace ATBGEBot
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            panelTimeChildAdd(4);  // add one for now..          
+            panelTimeChildAdd(4);  // add one for now..
         }
 
         private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
@@ -154,6 +197,65 @@ namespace ATBGEBot
             }
 
         }
+        
+        private int CheckForImage(string passedEnvironnment)
+        {
+            DirectoryInfo dir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+
+            try
+            {
+                if (passedEnvironnment == "BOOT") // We're opening the first image possible if found in the local dir created by the app.
+                {
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
+                    {
+                        for (int i = 0; i < dir.EnumerateFiles().Count(); i++)
+                        {
+                            imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                                + "\\ATBGEBot\\" + $"temp{i}.jpg"));
+                            if (imageBox.Source != null) // When finally set the source.. end!
+                            {
+                                return i;
+                            }
+                        }
+                    }
+                }
+                else if (passedEnvironnment == "NEXT")
+                {
+                    if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot\\" + $"temp{imageIndex+1}.jpg"))
+                    {
+                        imageIndex++;
+                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                            + "\\ATBGEBot\\" + $"temp{imageIndex}.jpg"));
+                        if (imageBox.Source != null) // When finally set the source.. end!
+                        {
+                            return imageIndex;
+                        }
+                    }
+                }
+                else if (passedEnvironnment == "PREV")
+                {
+                    if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot\\" + $"temp{imageIndex - 1}.jpg"))
+                    {
+                        imageIndex--;
+                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                            + "\\ATBGEBot\\" + $"temp{imageIndex}.jpg"));
+                        if (imageBox.Source != null) // When finally set the source.. end!
+                        {
+                            return imageIndex;
+                        }
+                    }
+                }
+
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error, probably tried setting the image box's source to a video. Continue as normal. {ex.Message}", "YEET!", MessageBoxButton.OK);
+                return -1;
+            }
+            
+        }
+
 
         private void PostTimerCheck()
         {
@@ -168,6 +270,20 @@ namespace ATBGEBot
                 consoleTBox.AppendText(Environment.NewLine + "Finished at:" + DateTime.Now);
                 PostTimerCheck();
             }
+        }
+
+        private void btnImgIndexClick(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            if (btn.Name == "btnImgNext")
+            {
+                CheckForImage("NEXT");
+            }
+            else if(btn.Name == "btnImgPrev")
+            {
+                CheckForImage("PREV");
+            }
+            
         }
     }
 }
