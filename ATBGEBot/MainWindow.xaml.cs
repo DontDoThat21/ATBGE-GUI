@@ -182,7 +182,7 @@ namespace ATBGEBot
                 rct.Height = 20;
                 rct.Stroke = Brushes.Black;
                 rct.StrokeThickness = 1;
-                rct.Fill = Brushes.Green;
+                rct.Fill = Brushes.Red;
 
                 spL.VerticalAlignment = VerticalAlignment.Center;
                 spL.Margin = new Thickness(2, 0, 5, 0);

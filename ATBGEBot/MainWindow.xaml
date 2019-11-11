@@ -80,7 +80,7 @@
         <TextBox x:Name="totalPicTBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontSize="9.5" Height="14" Margin="36,228,10,0" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" RenderTransformOrigin="0.521,-0.311" TextChanged="TotalPicTBox_TextChanged"/>
         <Button Content="Debug" Grid.Column="1" Click="Button_Click" HorizontalAlignment="Left" Margin="114,287,0,0" VerticalAlignment="Top" Width="75"/>
         <TextBox x:Name="lblPostTimes" Grid.Column="1" BorderBrush="DarkOrange" TextAlignment="Center" Margin="0,314,10,0" TextWrapping="Wrap" Text="Upcoming Post Times:" HorizontalAlignment="Right" Width="153" Height="23" VerticalAlignment="Top"/>
-        <StackPanel  Orientation="Vertical" Margin="0,338,11,12" Background="White" x:Name="OuterStackPanel" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Width="151" Grid.Column="1">
+        <StackPanel  CanVerticallyScroll="True" Orientation="Vertical" Margin="0,338,11,12" Background="White" x:Name="OuterStackPanel" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Width="151" Grid.Column="1">
             <StackPanel.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -90,7 +90,7 @@
                 </TransformGroup>
             </StackPanel.RenderTransform>
         </StackPanel>
-        <Button x:Name="btnBegin" Content="Begin" HorizontalAlignment="Left" Margin="36,252,0,0" VerticalAlignment="Top" Width="75" Click="AutomationBegin"/>
+        <Button x:Name="btnBegin" Content="Begin" Margin="36,252,10,0" VerticalAlignment="Top" Click="AutomationBegin"/>
         <Image Stretch="Uniform" x:Name="imageBox" Margin="41,119,24,0" Height="102" VerticalAlignment="Top" Grid.Column="1"/>
 
     </Grid>
