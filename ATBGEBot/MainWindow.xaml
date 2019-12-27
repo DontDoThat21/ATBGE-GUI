@@ -90,8 +90,12 @@
                 </TransformGroup>
             </StackPanel.RenderTransform>
         </StackPanel>
-        <Button x:Name="btnBegin" Content="Begin" Margin="36,252,10,0" VerticalAlignment="Top" Click="AutomationBegin"/>
+        <Button x:Name="btnBegin" Content="Begin" Margin="36,252,10,0" VerticalAlignment="Top" Click="btnBegin_Click"/>
         <Image Stretch="Uniform" x:Name="imageBox" Margin="41,119,24,0" Height="102" VerticalAlignment="Top" Grid.Column="1"/>
+        <GroupBox x:Name="timerGB" Header="Timer" HorizontalAlignment="Left" Margin="11,10,0,0" Width="100" Height="79" VerticalAlignment="Top">
+            <Label x:Name="lblNextUpload" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Next upload:" Margin="0,0,-2,0" VerticalAlignment="Top" FontSize="10"/>
+        </GroupBox>
+        <Label x:Name="lblTimer" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" Margin="16,58,15,0" VerticalAlignment="Top" FontSize="10"/>
 
     </Grid>
 </Window>

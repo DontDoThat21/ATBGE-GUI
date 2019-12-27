@@ -26,7 +26,6 @@ namespace InstagramATBGEBot
 
         private int imageId = 0;
         private int successUploads = 0;
-        private List<string> imageList = new List<string>();
         private System.Timers.Timer aTimer;
         public TwitterService service;
 
@@ -34,7 +33,8 @@ namespace InstagramATBGEBot
         public int timeBetween;
         public int imageIndex = 0;
 
-        public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day
+        public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day       
+        public List<string> imageList = new List<string>();
         public static List<Bitmap> photos = new List<Bitmap>();
         public Rootobject results;
         public bool twtrLognSuccess = false;
@@ -91,7 +91,14 @@ namespace InstagramATBGEBot
 
             if (exists)
             {
-                dir.Delete(true);
+                try
+                {
+                    dir.Delete(true);
+                }
+                catch (Exception)
+                {
+                   MessageBox.Show(@"The temp dir can't at Documents\ATGBEBOT\ can't be deleted. Contact a developer please.");
+                }
             }
             dir.Create();
 
@@ -121,131 +128,147 @@ namespace InstagramATBGEBot
         {
             service = new TwitterService(customerKey, customerSecret, access_token, access_token_secret);
         }
-        public int UploadPics(int totalPics, Rootobject pics, DateTime startT, DateTime endT)
-        {
-            DateTime[] dates = UploadDelaySet(totalPics, startT, endT);
-            for(int i = 0; i < dates.Length; i++)
-            {
-                key.SetValue($"UploadDate{i}", $"{dates[i]}");
-            }
+        //public int UploadPics(int totalPics, Rootobject pics, DateTime startT, DateTime endT)
+        //{
+        //    DateTime[] dates = UploadDelaySet(totalPics, startT, endT);
+        //    for(int i = 0; i < dates.Length; i++)
+        //    {
+        //        key.SetValue($"UploadDate{i}", $"{dates[i]}");
+        //    }
 
-            int picsAmnt = imageList.Count;
-            int width = 0;
-            int height = 0;
-            string errConsoleOutPut = "";
+        //    int picsAmnt = imageList.Count;
+        //    int width = 0;
+        //    int height = 0;
+        //    string errConsoleOutPut = "";
             
 
-            for (int i = 0; i < imageList.Count; i++)
-            {
-                if (i > 0)
-                {
-                    //TimerHelper();
-                }
-                try
-                {
-                    if (pics.data.children[i].data.url.Contains("imgur"))
-                    {
-                        pics.data.children[i].data.url = pics.data.children[i].data.url.Insert(8, "i.");
-                        pics.data.children[i].data.url = pics.data.children[i].data.url + ".jpg";
-                        WebRequest imgurRequest = WebRequest.Create(pics.data.children[i].data.url); 
-                    }
-                }
-                catch (Exception)
-                {
-                     errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
-                }
-                Bitmap photo;
-                try
-                {
-                    WebRequest request = WebRequest.Create(pics.data.children[i].data.url);
-                    WebResponse response = request.GetResponse();
-                    System.IO.Stream responseStream =
-                    response.GetResponseStream();
-                    photo = new Bitmap(responseStream);
-                    width = photo.Width;
-                    height = photo.Height;
-                    photo.Save("jargobargo" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
-                }
-                catch (Exception)
-                {
-                    errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
-                }                
+        //    for (int i = 0; i < imageList.Count; i++)
+        //    {
+        //        if (i > 0)
+        //        {
+        //            //TimerHelper();
+        //        }
+        //        try
+        //        {
+        //            if (pics.data.children[i].data.url.Contains("imgur"))
+        //            {
+        //                pics.data.children[i].data.url = pics.data.children[i].data.url.Insert(8, "i.");
+        //                pics.data.children[i].data.url = pics.data.children[i].data.url + ".jpg";
+        //                WebRequest imgurRequest = WebRequest.Create(pics.data.children[i].data.url); 
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+        //             errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
+        //        }
+        //        Bitmap photo;
+        //        try
+        //        {
+        //            WebRequest request = WebRequest.Create(pics.data.children[i].data.url);
+        //            WebResponse response = request.GetResponse();
+        //            System.IO.Stream responseStream =
+        //            response.GetResponseStream();
+        //            photo = new Bitmap(responseStream);
+        //            width = photo.Width;
+        //            height = photo.Height;
+        //            photo.Save("jargobargo" + i.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
+        //        }
+        //        catch (Exception)
+        //        {
+        //            errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
+        //        }                
 
-                using (var stream = new FileStream(imageList[i], FileMode.Open))
-                {
-                    try
-                    {
-                        service.SendTweetWithMedia(new SendTweetWithMediaOptions
-                        {
-                            Status = pics.data.children[i].data.title + "; Uploaded by " + pics.data.children[i].data.author + ". https://www.reddit.com/r/ATBGE/",
-                            Images = new Dictionary<string, Stream> { { imageList[i], stream } },
-                            PossiblySensitive = pics.data.children[i].data.over_18
-                        });
-                    }
-                    catch (NullReferenceException e)
-                    {
-                        errConsoleOutPut += ("Null reference error when uploading reddit.com" + pics.data.children[i].data.permalink) + "\n";
-                        errConsoleOutPut += $"Is_video: {pics.data.children[i].data.is_video}; \n";
-                        errConsoleOutPut += $"Trying to post this local file: {imageList[i]} \n";
-                    }
-                }
-                successUploads++;
-            }
-            imageIndex++;
-            return imageList.Count;
-        }
+        //        using (var stream = new FileStream(imageList[i], FileMode.Open))
+        //        {
+        //            try
+        //            {
+        //                service.SendTweetWithMedia(new SendTweetWithMediaOptions
+        //                {
+        //                    Status = pics.data.children[i].data.title + "; Uploaded by " + pics.data.children[i].data.author + ". https://www.reddit.com/r/ATBGE/",
+        //                    Images = new Dictionary<string, Stream> { { imageList[i], stream } },
+        //                    PossiblySensitive = pics.data.children[i].data.over_18
+        //                });
+        //            }
+        //            catch (NullReferenceException e)
+        //            {
+        //                errConsoleOutPut += ("Null reference error when uploading to reddit.com" + pics.data.children[i].data.permalink) + "\n";
+        //                errConsoleOutPut += $"Is_video: {pics.data.children[i].data.is_video}; \n";
+        //                errConsoleOutPut += $"Trying to post this local file: {imageList[i]} \n";
+        //            }
+        //        }
+        //        successUploads++;
+        //    }
+        //    imageIndex++;
+        //    return imageList.Count;
+        //}
 
-        public DateTime[] UploadDelaySet(int totalPics, DateTime startT, DateTime endT)
-        {
-            DateTime[] timesToPost = new DateTime[imageList.Count];
-            if (startT > DateTime.Now)
-            {
-                startT = DateTime.Now;
-            }
-            TimeSpan total = (endT - startT);
-            Double hoursBetween = total.TotalHours; // hours between start and end time of selected values.
-            if (hoursBetween < 0 && hoursBetween != 0) // if they selected stupid before and after times.. inverse the negative number.
-            {
-                hoursBetween = (hoursBetween * -1); // make the neg a pos.
-            }
-            double rate = 0;
-            if (imageList.Count == 1)
-            {
-                rate = (hoursBetween / imageList.Count); // how often were going to post a picture.. only one picture so no rate?
-            }
-            else
-            {
-                rate = 1.0; //(hoursBetween / totalPics); // how often were going to post a picture.
-                //rate += (rate / imageList.Count);
-                int notImageCount = totalPics - imageList.Count;
-                //int whateverTheFuckThisIs = notImageCount / 
-                //double rateToMultipleRateBy = (double)totalPics / (double)imageList.Count;
-                //rate = rateToMultipleRateBy * rate;
+        //public int UploadPic(Rootobject pic, DateTime startT, DateTime endT)
+        //{
+        //    dates = UploadDelaySet(1, startT, endT);
+        //    for (int i = 0; i < dates.Length; i++)
+        //    {
+        //        key.SetValue($"UploadDate{i}", $"{dates[i]}");
+        //    }
 
+        //    int picsAmnt = imageList.Count;
+        //    int width = 0;
+        //    int height = 0;
+        //    string errConsoleOutPut = "";
 
-            }
+        //    try
+        //    {
+        //        if (pic.data.children[0].data.url.Contains("imgur"))
+        //        {
+        //            pic.data.children[0].data.url = pic.data.children[0].data.url.Insert(8, "i.");
+        //            pic.data.children[0].data.url = pic.data.children[0].data.url + ".jpg";
+        //            WebRequest imgurRequest = WebRequest.Create(pic.data.children[0].data.url);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
+        //    }
+        //    Bitmap photo;
+        //    try
+        //    {
+        //        WebRequest request = WebRequest.Create(pic.data.children[0].data.url);
+        //        WebResponse response = request.GetResponse();
+        //        System.IO.Stream responseStream =
+        //        response.GetResponseStream();
+        //        photo = new Bitmap(responseStream);
+        //        width = photo.Width;
+        //        height = photo.Height;
+        //        photo.Save("jargobargo" + 0.ToString() + ".jpg", ImageFormat.Jpeg); // to debug local files saved
+        //    }
+        //    catch (Exception)
+        //    {
+        //        errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
+        //    }
 
-            int closestValRate = (int)(3600000 * rate);
-            timeBetween = closestValRate;
+        //    using (var stream = new FileStream(imageList[0], FileMode.Open))
+        //    {
+        //        try
+        //        {
+        //            service.SendTweetWithMedia(new SendTweetWithMediaOptions
+        //            {
+        //                Status = pic.data.children[0].data.title + "; Uploaded by " + pic.data.children[0].data.author + ". https://www.reddit.com/r/ATBGE/",
+        //                Images = new Dictionary<string, Stream> { { imageList[0], stream } },
+        //                PossiblySensitive = pic.data.children[0].data.over_18
+        //            });
+        //        }
+        //        catch (NullReferenceException e)
+        //        {
+        //            errConsoleOutPut += ("Null reference error when uploading to reddit.com" + pic.data.children[0].data.permalink) + "\n";
+        //            errConsoleOutPut += $"Is_video: {pic.data.children[0].data.is_video}; \n";
+        //            errConsoleOutPut += $"Trying to post this local file: {imageList[0]} \n";
+        //        }
+        //    }
+        //    successUploads++;
 
-            DateTime postAt;
-            for (double i = 0; i < imageList.Count; i++)
-            {
-                if (i == 0)
-                {
-                    postAt = startT;
-                    timesToPost[(int)i] = postAt;
-                }
-                else
-                {
-                    postAt = startT.AddHours(i * rate);
-                    timesToPost[(int)i] = postAt;
-                }
-            }
-            return timesToPost;
-            //Thread.Sleep(closestVal);
-            //await Task.Delay(closestVal); // closestVal
-        }
+        //    imageIndex++;
+        //    return imageList.Count;
+        //}
+
 
         public void TimerHelper(int imageIndexNum)
         {

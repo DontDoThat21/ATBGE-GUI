@@ -5,20 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Threading;
 using System.ComponentModel;
 using Microsoft.Win32;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
+using System.Windows.Threading;
+using TweetSharp;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace ATBGEBot
 {
@@ -29,7 +32,16 @@ namespace ATBGEBot
     {
         TwitterBot twtr;
         List<System.Drawing.Image> glblImgs = new List<System.Drawing.Image>();
+        public List<string> imageList = new List<string>();
         int imageIndex = -2;
+        public bool running = false;
+        public DateTime[] dates;
+        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
+        public TwitterService service;
+        private int successUploads = 0;
+        public int timeBetween;
+        private int dateCounter = 0;
+
 
         public MainWindow()
         {           
@@ -37,15 +49,20 @@ namespace ATBGEBot
             imageIndex = CheckForImage("BOOT");
         }
 
-        private void AutomationBegin(object sender, RoutedEventArgs e)
+        private void AutomationBegin()
         {
-            Button btn = (Button)sender;
-            twtr = new TwitterBot(totalPicTBox.Text);
-            twtr.TwitterLogin();
-            twittDot.Fill = Brushes.Green;
-            twitterLabel.Content = "Logged into Twitter.";
-            int totalUploads = twtr.UploadPics(int.Parse(totalPicTBox.Text), twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
-            panelTimeChildAdd(totalUploads); // Generating text box's now.
+            int totalUploads = 0;
+            this.Dispatcher.Invoke(() =>
+            {
+                twtr = new TwitterBot(totalPicTBox.Text);
+                twtr.TwitterLogin();
+                twittDot.Fill = System.Windows.Media.Brushes.Green;
+                twitterLabel.Content = "Logged into Twitter.";
+                totalUploads = UploadPic(twtr.results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+            });                    
+            
+            Task.Run(() => panelTimeChildAdd(totalUploads));
+            //panelTimeChildAdd(totalUploads); // Generating text box's now.
 
             List<string> urlsFromJson = new List<string>();
 
@@ -54,11 +71,7 @@ namespace ATBGEBot
                 urlsFromJson.Add(twtr.results.data.children[i].data.url);
             }
 
-            SetGlobalImages(urlsFromJson);
-
-            
-
-
+            Task.Run(() => SetGlobalImages(urlsFromJson));
             //PostTimerCheck();
         }
 
@@ -75,8 +88,11 @@ namespace ATBGEBot
                 {
                     try
                     {
-                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
                         "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -160,40 +176,43 @@ namespace ATBGEBot
 
             for (int i = 0; i < uploadCount; i++)
             {
-                // --- Label Gen Section --- 
-                StackPanel spL = new StackPanel();
-                spL.Width = OuterStackPanel.ActualWidth;
+                this.Dispatcher.Invoke(() =>
+                {
+                    // --- Label Gen Section --- 
+                    StackPanel spL = new StackPanel();
+                    spL.Width = OuterStackPanel.ActualWidth;
 
-                Label lbl = new Label();
-                string cast = (string)key.GetValue($"UploadDate{i}");
-                DateTime dVal = DateTime.Parse(cast);
-                lbl.Content = dVal.Month + "/" + dVal.Day + " " + dVal.TimeOfDay; // This should be a registry call.
-                lbl.BorderBrush = Brushes.Black;
-                lbl.BorderThickness = new Thickness(1, 1, 1, 1);
-                lbl.Width = OuterStackPanel.ActualWidth*.8; // Set the text control to 80%.. 
-                lbl.FontSize = 9;
-                lbl.Height = 35;
-                lbl.Padding = new Thickness(10);
-                lbl.Background = Brushes.CadetBlue;
-                lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    Label lbl = new Label();
+                    string cast = (string)key.GetValue($"UploadDate{i}");
+                    DateTime dVal = DateTime.Parse(cast);
+                    lbl.Content = dVal.Month + "/" + dVal.Day + " " + dVal.TimeOfDay; // This should be a registry call.
+                    lbl.BorderBrush = System.Windows.Media.Brushes.Black;
+                    lbl.BorderThickness = new Thickness(1, 1, 1, 1);
+                    lbl.Width = OuterStackPanel.ActualWidth * .8; // Set the text control to 80%.. 
+                    lbl.FontSize = 9;
+                    lbl.Height = 35;
+                    lbl.Padding = new Thickness(10);
+                    lbl.Background = System.Windows.Media.Brushes.CadetBlue;
+                    lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
 
-                Rectangle rct = new Rectangle();
-                rct.Width = OuterStackPanel.ActualWidth * .15;
-                rct.Height = 20;
-                rct.Stroke = Brushes.Black;
-                rct.StrokeThickness = 1;
-                rct.Fill = Brushes.Red;
+                    Rectangle rct = new Rectangle();
+                    rct.Width = (int)(OuterStackPanel.ActualWidth * .15);
+                    rct.Height = 20;
+                    rct.Stroke = System.Windows.Media.Brushes.Black;
+                    rct.StrokeThickness = 1;
+                    rct.Fill = Brushes.Red;
 
-                spL.VerticalAlignment = VerticalAlignment.Center;
-                spL.Margin = new Thickness(2, 0, 5, 0);
-                spL.Background = Brushes.White;
-                spL.Orientation = Orientation.Horizontal;                
-                spL.Children.Add(lbl);
-                spL.Children.Add(rct);
+                    spL.VerticalAlignment = VerticalAlignment.Center;
+                    spL.Margin = new Thickness(2, 0, 5, 0);
+                    spL.Background = Brushes.White;
+                    spL.Orientation = Orientation.Horizontal;
+                    spL.Children.Add(lbl);
+                    spL.Children.Add(rct);
 
-                //OuterStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
-                //OuterStackPanel.Children.Add(lbl);
-                OuterStackPanel.Children.Add(spL);
+                    //OuterStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                    //OuterStackPanel.Children.Add(lbl);
+                    OuterStackPanel.Children.Add(spL);
+                });
             }
 
         }
@@ -245,30 +264,12 @@ namespace ATBGEBot
                         }
                     }
                 }
-
                 return -1;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error, probably tried setting the image box's source to a video. Continue as normal. {ex.Message}", "YEET!", MessageBoxButton.OK);
                 return -1;
-            }
-            
-        }
-
-
-        private void PostTimerCheck()
-        {
-            DateTime dt = DateTime.Parse(endTCBox.Text);
-            if (DateTime.Now >= dt)
-            {
-                // End..
-
-            }
-            else
-            {
-                consoleTBox.AppendText(Environment.NewLine + "Finished at:" + DateTime.Now);
-                PostTimerCheck();
             }
         }
 
@@ -282,8 +283,160 @@ namespace ATBGEBot
             else if(btn.Name == "btnImgPrev")
             {
                 CheckForImage("PREV");
+            }            
+        }
+
+        private void btnBegin_Click(object sender, RoutedEventArgs e)
+        {
+            if (running == true)
+            {
+                running = false;
             }
-            
+            else if(running == false)
+            {
+                running = true;
+
+                StartTimer();
+            }
+            Task.Run(AutomationBegin);
+        }
+
+        private void StartTimer()
+        {
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += tickevent;
+            timer.Start();
+        }
+
+        private void tickevent(object sender, EventArgs e)
+        {
+            lblTimer.Content = DateTime.Now.ToShortTimeString();
+            if (DateTime.Now > dates[dateCounter])
+            {
+                UploadPic();
+            }
+        }
+
+        public DateTime[] UploadDelaySet(int totalPics, DateTime startT, DateTime endT)
+        {
+            DateTime[] timesToPost = new DateTime[imageList.Count];
+            if (startT > DateTime.Now)
+            {
+                startT = DateTime.Now;
+            }
+            TimeSpan total = (endT - startT);
+            Double hoursBetween = total.TotalHours; // hours between start and end time of selected values.
+            if (hoursBetween < 0 && hoursBetween != 0) // if they selected stupid before and after times.. inverse the negative number.
+            {
+                hoursBetween = (hoursBetween * -1); // make the neg a pos.
+            }
+            double rate = 0;
+            if (imageList.Count == 1)
+            {
+                rate = (hoursBetween / imageList.Count); // how often were going to post a picture.. only one picture so no rate?
+            }
+            else
+            {
+                rate = 1.0; //(hoursBetween / totalPics); // how often were going to post a picture.
+                //rate += (rate / imageList.Count);
+                int notImageCount = totalPics - imageList.Count;
+                //int whateverTheFuckThisIs = notImageCount / 
+                //double rateToMultipleRateBy = (double)totalPics / (double)imageList.Count;
+                //rate = rateToMultipleRateBy * rate;
+
+
+            }
+
+            int closestValRate = (int)(3600000 * rate);
+            timeBetween = closestValRate;
+
+            DateTime postAt;
+            for (double i = 0; i < imageList.Count; i++)
+            {
+                if (i == 0)
+                {
+                    postAt = startT;
+                    timesToPost[(int)i] = postAt;
+                }
+                else
+                {
+                    postAt = startT.AddHours(i * rate);
+                    timesToPost[(int)i] = postAt;
+                }
+            }
+
+
+            return timesToPost;
+            //Thread.Sleep(closestVal);
+            //await Task.Delay(closestVal); // closestVal
+        }
+
+        public int UploadPic(Rootobject pic, DateTime startT, DateTime endT)
+        {
+            dates = UploadDelaySet(1, startT, endT);
+            for (int i = 0; i < dates.Length; i++)
+            {
+                key.SetValue($"UploadDate{i}", $"{dates[i]}");
+            }
+
+            int picsAmnt = imageList.Count;
+            int width = 0;
+            int height = 0;
+            string errConsoleOutPut = "";
+
+            try
+            {
+                if (pic.data.children[0].data.url.Contains("imgur"))
+                {
+                    pic.data.children[0].data.url = pic.data.children[0].data.url.Insert(8, "i.");
+                    pic.data.children[0].data.url = pic.data.children[0].data.url + ".jpg";
+                    WebRequest imgurRequest = WebRequest.Create(pic.data.children[0].data.url);
+                }
+            }
+            catch (Exception)
+            {
+                errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
+            }
+            System.Drawing.Bitmap photo;
+            try
+            {
+                WebRequest request = WebRequest.Create(pic.data.children[0].data.url);
+                WebResponse response = request.GetResponse();
+                System.IO.Stream responseStream =
+                response.GetResponseStream();
+                photo = new System.Drawing.Bitmap(responseStream);
+                width = photo.Width;
+                height = photo.Height;
+                photo.Save("jargobargo" + 0.ToString() + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg); // to debug local files saved
+            }
+            catch (Exception)
+            {
+                errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
+            }
+
+            using (var stream = new FileStream(imageList[0], FileMode.Open))
+            {
+                try
+                {
+                    service.SendTweetWithMedia(new SendTweetWithMediaOptions
+                    {
+                        Status = pic.data.children[0].data.title + "; Uploaded by " + pic.data.children[0].data.author + ". https://www.reddit.com/r/ATBGE/",
+                        Images = new Dictionary<string, Stream> { { imageList[0], stream } },
+                        PossiblySensitive = pic.data.children[0].data.over_18
+                    });
+                }
+                catch (NullReferenceException e)
+                {
+                    errConsoleOutPut += ("Null reference error when uploading to reddit.com" + pic.data.children[0].data.permalink) + "\n";
+                    errConsoleOutPut += $"Is_video: {pic.data.children[0].data.is_video}; \n";
+                    errConsoleOutPut += $"Trying to post this local file: {imageList[0]} \n";
+                }
+            }
+            successUploads++;
+
+            imageIndex++;
+            return imageList.Count;
         }
     }
 }
