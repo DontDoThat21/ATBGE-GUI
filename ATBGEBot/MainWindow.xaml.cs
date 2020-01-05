@@ -34,6 +34,7 @@ namespace ATBGEBot
         public TwitterService service;
         public Rootobject results;
         public int timeBetween;
+        public int totalRequestedUploads;
         private int dateCounter = 0;
         public int whatUploadWereOn = 0;
         public int lastSuccessPhotoCount;
@@ -61,59 +62,66 @@ namespace ATBGEBot
                     dates = UploadDelaySet(imageList.Count, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
                 }
 
-                totalUploads = UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
-            });                    
-            
-            Task.Run(() => panelTimeChildAdd(totalUploads));
-        }
+                totalUploads = imageList.Count;
+            });
 
-        private void GetImagesFromUrls(List<string> urlsFromJson)
-        {
-            System.Drawing.Image[] images = DownloadImagesFromUrls(urlsFromJson); // new Image[totalUploads]; // image array returned.
-            if (images != null)
+            if (imageList.Count < int.Parse(totalPicTBox.Text))
             {
-                glblImgs = new List<System.Drawing.Image>();
-                foreach (System.Drawing.Image img in images)
-                    glblImgs.Add(img);
-
-                for (int i = 0; i < glblImgs.Count; i++)
-                {
-                    try
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                        "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error setting image box source. Did we find a video? {ex.Message}");
-                    }
-                }
+                MessageBox.Show("How the hell did we not download enough images? The bot somehow isn't downloading enough from reddit; please contact a developer. The app will continute to run, but very buggily. This wasn't accounted for, dammit!");
+            }
+            else
+            {
+                Task.Run(() => panelTimeChildAdd(totalRequestedUploads));
             }
         }
 
-        private System.Drawing.Image[] DownloadImagesFromUrls(List<string> urls)
-        {
-            System.Drawing.Image[] imagesReturned = new System.Drawing.Image[urls.Count];
+        //private void GetImagesFromUrls(List<string> urlsFromJson)
+        //{
+        //    System.Drawing.Image[] images = DownloadImagesFromUrls(urlsFromJson); // new Image[totalUploads]; // image array returned.
+        //    if (images != null)
+        //    {
+        //        glblImgs = new List<System.Drawing.Image>();
+        //        foreach (System.Drawing.Image img in images)
+        //            glblImgs.Add(img);
 
-            for (int i = 0; i < urls.Count; i++)
-            {
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(urls[0]);
-                webRequest.AllowWriteStreamBuffering = true;
-                webRequest.Timeout = 45000;
+        //        for (int i = 0; i < glblImgs.Count; i++)
+        //        {
+        //            try
+        //            {
+        //                this.Dispatcher.Invoke(() =>
+        //                {
+        //                    imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+        //                "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
+        //                });
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show($"Error setting image box source. Did we find a video? {ex.Message}");
+        //            }
+        //        }
+        //    }
+        //}
+
+        //private System.Drawing.Image[] DownloadImagesFromUrls(List<string> urls)
+        //{
+        //    System.Drawing.Image[] imagesReturned = new System.Drawing.Image[urls.Count];
+
+        //    for (int i = 0; i < urls.Count; i++)
+        //    {
+        //        HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(urls[0]);
+        //        webRequest.AllowWriteStreamBuffering = true;
+        //        webRequest.Timeout = 45000;
                 
-                WebResponse webResponse = webRequest.GetResponse();
+        //        WebResponse webResponse = webRequest.GetResponse();
                 
-                Stream stream = webResponse.GetResponseStream();
+        //        Stream stream = webResponse.GetResponseStream();
                 
-                imagesReturned[i] = System.Drawing.Image.FromStream(stream);
-            }            
+        //        imagesReturned[i] = System.Drawing.Image.FromStream(stream);
+        //    }            
 
             
-            return imagesReturned;
-        }
+        //    return imagesReturned;
+        //}
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -159,7 +167,7 @@ namespace ATBGEBot
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            panelTimeChildAdd(4);  // add one for now..
+           // panelTimeChildAdd(4);  // add one for now..
         }
 
         private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
@@ -172,9 +180,11 @@ namespace ATBGEBot
                 {
                     // --- Label Gen Section --- 
                     StackPanel spL = new StackPanel();
+                    spL.Name = "datesCollection";
                     spL.Width = OuterStackPanel.ActualWidth;
 
                     Label lbl = new Label();
+                    lbl.Name = $"dateVal{i}";
                     string cast = (string)key.GetValue($"UploadDate{i}");
                     DateTime dVal = DateTime.Parse(cast);
                     lbl.Content = dVal.Month + "/" + dVal.Day + " " + dVal.TimeOfDay; // This should be a registry call.
@@ -281,6 +291,8 @@ namespace ATBGEBot
 
         private void btnBegin_Click(object sender, RoutedEventArgs e)
         {
+            totalRequestedUploads = int.Parse(totalPicTBox.Text);
+
             if (running == true)
             {
                 running = false;
@@ -310,8 +322,21 @@ namespace ATBGEBot
             lblTimer.Content = DateTime.Now.ToShortTimeString();
             if (DateTime.Now > dates[dateCounter])
             {
-                UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
-                dateCounter++;
+                if (dateCounter+1 >= totalRequestedUploads)
+                {
+                    // i dont believe anything should exec.
+                }
+                else
+                {                
+                    UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
+                    if (dateCounter == totalRequestedUploads)
+                    {
+                    }
+                    else
+                    {
+                        dateCounter++;
+                    }
+                }
             }
         }
 
@@ -366,16 +391,13 @@ namespace ATBGEBot
             //await Task.Delay(closestVal); // closestVal
         }
 
-        public int UploadPic(Rootobject pic, DateTime startT, DateTime endT, int imageOfResultsIndex)
+        public void UploadPic(Rootobject pic, DateTime startT, DateTime endT, int imageOfResultsIndex)
         {            
             for (int i = 0; i < dates.Length; i++)
             {
                 key.SetValue($"UploadDate{i}", $"{dates[i]}");
             }
 
-            int picsAmnt = imageList.Count;
-            int width = 0;
-            int height = 0;
             string errConsoleOutPut = "";
 
             try
@@ -398,8 +420,6 @@ namespace ATBGEBot
                 System.IO.Stream responseStream =
                 response.GetResponseStream();
                 photo = new System.Drawing.Bitmap(responseStream);
-                width = photo.Width;
-                height = photo.Height;
                 photo.Save("jargobargo" + 0.ToString() + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg); // to debug local files saved
             }
             catch (Exception)
@@ -415,8 +435,13 @@ namespace ATBGEBot
                     {
                         Status = pic.data.children[imageOfResultsIndex].data.title + "; Uploaded by " + pic.data.children[imageOfResultsIndex].data.author + ". https://www.reddit.com/r/ATBGE/",
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
-                        PossiblySensitive = pic.data.children[0].data.over_18
+                        PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
+                    StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                    Rectangle child = (Rectangle)stackPanel.Children[1];
+                    child.Fill = Brushes.Green;
+                    //item.Stroke = Brushes.Green;
+                    // do some magic and bullshit with the panel generated.
                 }
                 catch (NullReferenceException e)
                 {
@@ -428,7 +453,6 @@ namespace ATBGEBot
 
             imageIndex++;
             imageOfResultsIndex++;
-            return imageList.Count;
         }
 
         public void TwitterLogin()
@@ -436,9 +460,11 @@ namespace ATBGEBot
             service = new TwitterService(customerKey, customerSecret, access_token, access_token_secret);
         }
 
-        static Rootobject GetJsonForToday(string getPicCnt)
+        static Rootobject GetJsonForToday(string imgCount)
         {
-            Uri reddit = new Uri(redditWorkingUrl + getPicCnt + "&t=day");
+            int paddedResultCount = int.Parse(imgCount) + 10;
+
+            Uri reddit = new Uri(redditWorkingUrl + paddedResultCount + "&t=day");
             HttpClient client = new HttpClient();
             string json = new WebClient().DownloadString(reddit);
             Rootobject objectResponse;
@@ -491,11 +517,26 @@ namespace ATBGEBot
                 WebRequest request;
                 if (topToday.data.children[i].data.url.Contains("imgur"))
                 {
-                    request = WebRequest.Create(topToday.data.children[i].data.url + ".jpg");
+                    if (topToday.data.children[i].data.is_video == true)
+                    {
+                        continue;
+                        // skip cus its a video? videos are for normies. maybe well code that later.
+                    }
+                    else
+                    {
+                        request = WebRequest.Create(topToday.data.children[i].data.url + ".jpg");
+                    }
                 }
                 else
                 {
-                    request = WebRequest.Create(topToday.data.children[i].data.url);
+                    if (topToday.data.children[i].data.is_video == true)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        request = WebRequest.Create(topToday.data.children[i].data.url);
+                    }
                 }
                 WebResponse response = request.GetResponse();
                 System.IO.Stream responseStream = response.GetResponseStream();

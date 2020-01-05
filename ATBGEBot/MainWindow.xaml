@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="ATBGE Poster" Height="472.989" Width="343.834" FontFamily="Comic Sans MS">
+        Title="ATBGE Poster" Height="492.989" Width="386.834" FontFamily="Comic Sans MS">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="143*"/>
@@ -41,8 +41,8 @@
         <Label FontFamily="Comic Sans MS" x:Name="label" Content="Console" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top"/>
         <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="39.5,247,0,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Width="177"/>
         <Rectangle x:Name="imgCntr" Fill="CadetBlue" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
-        <Button x:Name="btnImgNext" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90" Click="btnImgIndexClick"/>
-        <Button x:Name="btnImgPrev" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Click="btnImgIndexClick"/>
+        <Button x:Name="btnImgNext" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Right" Width="90"/>
+        <Button x:Name="btnImgPrev" Background="Orange" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Left" Width="90"/>
         <Label x:Name="lastRunLabel" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Turned on at: NULL" Margin="106,10,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Not logged in" Margin="106,48,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="startTCBox" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19" Text="08:00:00">
