@@ -95,7 +95,8 @@
         <GroupBox x:Name="timerGB" Header="Timer" HorizontalAlignment="Left" Margin="11,10,0,0" Width="100" Height="79" VerticalAlignment="Top">
             <Label x:Name="lblNextUpload" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Next upload:" Margin="0,0,-2,0" VerticalAlignment="Top" FontSize="10"/>
         </GroupBox>
-        <Label x:Name="lblTimer" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" Margin="16,58,15,0" VerticalAlignment="Top" FontSize="10"/>
+        <Label x:Name="lblTimer" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" Margin="16,67,30,0" VerticalAlignment="Top" FontSize="10"/>
+        <Label x:Name="lblNextUploadTime" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" Margin="16,40,30,0" VerticalAlignment="Top" FontSize="10"/>
 
     </Grid>
 </Window>

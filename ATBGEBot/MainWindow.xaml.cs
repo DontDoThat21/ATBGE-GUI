@@ -49,7 +49,7 @@ namespace ATBGEBot
             imageIndex = CheckForImage("BOOT");
         }
 
-        private void AutomationBegin()
+        private async void AutomationBegin()
         {
             int totalUploads = 0;
             this.Dispatcher.Invoke(() =>
@@ -71,8 +71,16 @@ namespace ATBGEBot
             }
             else
             {
-                Task.Run(() => panelTimeChildAdd(totalRequestedUploads));
+                await ExecStuff();
+                StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[0];
+                Label child = (Label)stackPanel.Children[0];
+                lblNextUploadTime.Content = child.Content;
             }
+        }
+
+        public async Task ExecStuff()
+        {
+                await Task.Run(() => panelTimeChildAdd(totalRequestedUploads));
         }
 
         //private void GetImagesFromUrls(List<string> urlsFromJson)
@@ -319,7 +327,7 @@ namespace ATBGEBot
 
         private void tickevent(object sender, EventArgs e)
         {
-            lblTimer.Content = DateTime.Now.ToShortTimeString();
+            lblTimer.Content = "Cur Time: " + DateTime.Now.ToShortTimeString();
             if (DateTime.Now > dates[dateCounter])
             {
                 if (dateCounter+1 >= totalRequestedUploads)
@@ -433,7 +441,7 @@ namespace ATBGEBot
                 {
                     service.SendTweetWithMedia(new SendTweetWithMediaOptions
                     {
-                        Status = pic.data.children[imageOfResultsIndex].data.title + "; Uploaded by " + pic.data.children[imageOfResultsIndex].data.author + ". https://www.reddit.com/r/ATBGE/",
+                        Status = pic.data.children[imageOfResultsIndex].data.title + "; Uploaded by /u/" + pic.data.children[imageOfResultsIndex].data.author + ". https://www.reddit.com/r/ATBGE/",
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
                         PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
