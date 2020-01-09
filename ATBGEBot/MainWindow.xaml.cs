@@ -42,6 +42,7 @@ namespace ATBGEBot
         public string customerSecret = "oUtI7fqxdUf7u2aIGBmxqnPxND2tUrJlKjEG2L9Cc5kb3jii7P";
         public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
         public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
+        public DateTime dayAt;
 
         public MainWindow()
         {           
@@ -71,14 +72,14 @@ namespace ATBGEBot
             }
             else
             {
-                await ExecStuff();
+                await PopulateScheduledUploadsDrawsAsync();
                 StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[0];
                 Label child = (Label)stackPanel.Children[0];
                 lblNextUploadTime.Content = child.Content;
             }
         }
 
-        public async Task ExecStuff()
+        public async Task PopulateScheduledUploadsDrawsAsync()
         {
                 await Task.Run(() => panelTimeChildAdd(totalRequestedUploads));
         }
@@ -300,21 +301,22 @@ namespace ATBGEBot
         private void btnBegin_Click(object sender, RoutedEventArgs e)
         {
             totalRequestedUploads = int.Parse(totalPicTBox.Text);
+            dayAt = DateTime.Now;
 
             if (running == true)
             {
                 running = false;
             }
-            else if(running == false)
+            else if (running == false)
             {
+                running = true;
                 results = GetJsonForToday(totalPicTBox.Text);
                 TwitterLogin();
                 GetImagesFromResults(results);
                 AutomationBegin();
-                running = true;
                 dates = UploadDelaySet(1, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
                 StartTimer();
-            }            
+            }
         }
 
         private void StartTimer()
@@ -328,24 +330,45 @@ namespace ATBGEBot
         private void tickevent(object sender, EventArgs e)
         {
             lblTimer.Content = "Cur Time: " + DateTime.Now.ToShortTimeString();
-            if (DateTime.Now > dates[dateCounter])
+            if (DateTime.Now.DayOfWeek.ToString().Equals(dayAt.DayOfWeek.ToString()) // It's the same say as when we last started the cycle.
+                && dateCounter <= int.Parse(totalPicTBox.Text)-1) // The total pictures the user enters, say 5, isn't == to the index for the date array associated for each upload since 0 based.
             {
-                if (dateCounter+1 >= totalRequestedUploads)
+                if (DateTime.Now > dates[dateCounter]) // was not -1
                 {
-                    // i dont believe anything should exec.
-                }
-                else
-                {                
-                    UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
-                    if (dateCounter == totalRequestedUploads)
+                    if (dateCounter >= totalRequestedUploads) // was +1
                     {
+                        // i dont believe anything should exec.
                     }
                     else
-                    {
-                        dateCounter++;
+                    {                
+                        UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
+                        if (dateCounter == totalRequestedUploads)
+                        {
+                        }
+                        else
+                        {
+                            dateCounter++;
+                        }
                     }
                 }
             }
+            else if (DateTime.Now.DayOfWeek.ToString().Equals(dayAt.DayOfWeek.ToString()) == false) // If the day we clicked the begin is not the same day as the current tick of the timer.. we must have reset. It's probably midnight. Lets reget our photos for the day, AND set up our timers given last params.
+            {
+                imageIndex = 0; // Probably reset everything, yes?
+                dayAt = DateTime.Now;
+                results = GetJsonForToday(totalPicTBox.Text); // This should be re-get/setting the root object or photos object at midnight.
+                // With all of this being reset.. Can't we just call upload pic? Well, we wouldn't want to call it here since after this SINGLE midnight tick being entered, 
+                // it will make the next tick a second later begin the cycle! 
+                // Dank.
+
+                // One thing definitely not doing that should be done.. that stack panel should be cleared first no?
+                OuterStackPanel = new StackPanel(); // This should re-init the panel and remove hopefully previous day drawings.
+            }
+            else
+            {
+                // When we've uploaded all the pics for the day, and the next day still hasn't begun.
+            }
+            
         }
 
         public DateTime[] UploadDelaySet(int totalPics, DateTime startT, DateTime endT)
@@ -445,7 +468,15 @@ namespace ATBGEBot
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
                         PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
-                    StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                    StackPanel stackPanel = new StackPanel();
+                    try
+                    {
+                        stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        PopulateScheduledUploadsDrawsAsync();
+                    }
                     Rectangle child = (Rectangle)stackPanel.Children[1];
                     child.Fill = Brushes.Green;
                     //item.Stroke = Brushes.Green;
