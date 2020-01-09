@@ -43,11 +43,13 @@ namespace ATBGEBot
         public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
         public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
         public DateTime dayAt;
+        public DateTime dayFirstRun;
 
         public MainWindow()
         {           
             InitializeComponent();
             imageIndex = CheckForImage("BOOT");
+            StartTimer();
         }
 
         private async void AutomationBegin()
@@ -302,10 +304,13 @@ namespace ATBGEBot
         {
             totalRequestedUploads = int.Parse(totalPicTBox.Text);
             dayAt = DateTime.Now;
+            dayFirstRun = DateTime.Now;
+            lastRunLabel.Content = "Turned on at: " + dayFirstRun.ToShortDateString();
 
             if (running == true)
             {
                 running = false;
+                btnBegin.Content = "Begin";
             }
             else if (running == false)
             {
@@ -314,8 +319,8 @@ namespace ATBGEBot
                 TwitterLogin();
                 GetImagesFromResults(results);
                 AutomationBegin();
-                dates = UploadDelaySet(1, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
-                StartTimer();
+                btnBegin.Content = "Stop";
+                //StartTimer();
             }
         }
 
@@ -329,9 +334,10 @@ namespace ATBGEBot
 
         private void tickevent(object sender, EventArgs e)
         {
-            lblTimer.Content = "Cur Time: " + DateTime.Now.ToShortTimeString();
+            lblTimer.Content = "Now: " + DateTime.Now.ToShortTimeString();
             if (DateTime.Now.DayOfWeek.ToString().Equals(dayAt.DayOfWeek.ToString()) // It's the same say as when we last started the cycle.
-                && dateCounter <= int.Parse(totalPicTBox.Text)-1) // The total pictures the user enters, say 5, isn't == to the index for the date array associated for each upload since 0 based.
+                && dateCounter <= int.Parse(totalPicTBox.Text)-1
+                && running == true) // The total pictures the user enters, say 5, isn't == to the index for the date array associated for each upload since 0 based.
             {
                 if (DateTime.Now > dates[dateCounter]) // was not -1
                 {
