@@ -468,6 +468,7 @@ namespace ATBGEBot
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
                         PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
+                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToShortTimeString()}.");
                     StackPanel stackPanel = new StackPanel();
                     try
                     {
@@ -492,6 +493,11 @@ namespace ATBGEBot
 
             imageIndex++;
             imageOfResultsIndex++;
+
+            if (string.IsNullOrEmpty(errConsoleOutPut))
+            {
+                consoleTBox.AppendText("\n" + errConsoleOutPut);
+            }
         }
 
         public void TwitterLogin()
