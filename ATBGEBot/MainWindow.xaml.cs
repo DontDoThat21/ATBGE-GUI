@@ -1,19 +1,22 @@
-﻿using InstagramATBGEBot;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.Win32;
-using System.Net;
-using System.IO;
-using Newtonsoft.Json;
-using System.Windows.Threading;
-using TweetSharp;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Net.Http;
+using System.Windows.Threading;
+using TweetSharp;
 
 namespace ATBGEBot
 {
@@ -38,10 +41,16 @@ namespace ATBGEBot
         private int dateCounter = 0;
         public int whatUploadWereOn = 0;
         public int lastSuccessPhotoCount;
-        public string customerKey = "NwhE01jkavtSX5I6gfGmD1Qho";
-        public string customerSecret = "oUtI7fqxdUf7u2aIGBmxqnPxND2tUrJlKjEG2L9Cc5kb3jii7P";
-        public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
-        public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
+        //public string customerKey = "NwhE01jkavtSX5I6gfGmD1Qho";
+        //public string customerSecret = "oUtI7fqxdUf7u2aIGBmxqnPxND2tUrJlKjEG2L9Cc5kb3jii7P";
+        //public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
+        //public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
+        
+        public string customerKey = "v1tlVp3XwmZhjKrmc04qRBYbc";
+        public string customerSecret = "IPbslteDjQoGNx5tJS6QNmBvoCoq65Nh2E9TPQBGDLpor1jtUr";
+        public string access_token = "947618558347022336-OXuymBoyTX3tIwziX8g51tSMtXasV7S";
+        public string access_token_secret = "2yojE4I2niAzqdM94vae6MOMIK17XDsXChFcw45iDWRe3";
+
         public DateTime dayAt;
         public DateTime dayFirstRun;
 
@@ -49,6 +58,8 @@ namespace ATBGEBot
         {           
             InitializeComponent();
             imageIndex = CheckForImage("BOOT");
+            startTCBox.SelectedIndex = 0;
+            endTCBox.SelectedIndex = endTCBox.Items.Count-5;
             StartTimer();
         }
 
@@ -238,18 +249,28 @@ namespace ATBGEBot
             {
                 if (passedEnvironnment == "BOOT") // We're opening the first image possible if found in the local dir created by the app.
                 {
-                    //if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
-                    //{
-                    //    for (int i = 0; i < dir.EnumerateFiles().Count(); i++)
-                    //    {
-                    //        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                    //            + "\\ATBGEBot\\" + $"temp{i}.jpg"));
-                    //        if (imageBox.Source != null) // When finally set the source.. end!
-                    //        {
-                    //            return i;
-                    //        }
-                    //    }
-                    //}
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
+                    {
+                        string[] photoFileNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+                        string pattern = @"\d";
+                        StringBuilder sb = new StringBuilder();
+                        int[] photoIndexNums = new int[photoFileNames.Length];
+
+                        for (int i = 0; i < photoFileNames.Length; i++)
+                        {
+                            foreach (Match m in Regex.Matches(photoFileNames[i], pattern))
+                            {
+                                sb.Append(m);
+                            }
+                            photoIndexNums[i] = int.Parse(sb.ToString());
+                            sb = new StringBuilder();
+                        }
+
+                        int lowest = photoIndexNums.Min();
+
+                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                            + "\\ATBGEBot\\" + $"temp{lowest}.jpg"));
+                    }
                     return 0;
                 }
                 else if (passedEnvironnment == "NEXT")
@@ -333,7 +354,7 @@ namespace ATBGEBot
         }
 
         private void tickevent(object sender, EventArgs e)
-        {
+        { 
             lblTimer.Content = "Now: " + DateTime.Now.ToShortTimeString();
             if (DateTime.Now.DayOfWeek.ToString().Equals(dayAt.DayOfWeek.ToString()) // It's the same say as when we last started the cycle.
                 && dateCounter <= int.Parse(totalPicTBox.Text)-1
@@ -450,19 +471,6 @@ namespace ATBGEBot
                 errConsoleOutPut += "Imgur link was not an image. Canceling upload. \n";
             }
             System.Drawing.Bitmap photo;
-            try
-            {
-                WebRequest request = WebRequest.Create(pic.data.children[imageOfResultsIndex].data.url);
-                WebResponse response = request.GetResponse();
-                System.IO.Stream responseStream =
-                response.GetResponseStream();
-                photo = new System.Drawing.Bitmap(responseStream);
-                photo.Save("jargobargo" + 0.ToString() + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg); // to debug local files saved
-            }
-            catch (Exception)
-            {
-                errConsoleOutPut += "Something went wrong when trying to return the reddit link as a photo into memory. Cancelling this specific upload.";
-            }
 
             using (var stream = new FileStream(imageList[imageOfResultsIndex], FileMode.Open))
             {
@@ -474,7 +482,7 @@ namespace ATBGEBot
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
                         PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
-                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToShortTimeString()}.");
+                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToLongDateString()}.");
                     StackPanel stackPanel = new StackPanel();
                     try
                     {
@@ -488,6 +496,7 @@ namespace ATBGEBot
                     child.Fill = Brushes.Green;
                     //item.Stroke = Brushes.Green;
                     // do some magic and bullshit with the panel generated.
+                    uploadCountLabel.Content = $"Photos uploaded: {imageIndex + 1}";
                 }
                 catch (NullReferenceException e)
                 {
@@ -610,5 +619,23 @@ namespace ATBGEBot
             return imageList;
         }
 
+        private void imageBox_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Somehow failed to open the image at {Environment.SpecialFolder.MyDocuments + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg"} Please contact a developer. May be because file is not a JPG and is another format? {ex.Message}.", "Error!");
+                consoleTBox.AppendText($"Failed opening image {Environment.SpecialFolder.MyDocuments + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg"} at {DateTime.Now.ToLongDateString()}");
+            }
+        }
+
+        private void mysteryMenu_OpenHandler(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ExtrasWindow tomWindow = new ExtrasWindow();
+            tomWindow.Show();
+        }
     }
 }

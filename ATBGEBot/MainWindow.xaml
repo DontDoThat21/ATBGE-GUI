@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="ATBGE Poster" Height="492.989" Width="390.834" FontFamily="Comic Sans MS" MinWidth="390.834" MinHeight="492.989">
+        Title="ATBGE Poster" Height="492.989" Width="390.834" FontFamily="Comic Sans MS" MinWidth="395" MinHeight="492.989">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="143*"/>
@@ -26,7 +26,7 @@
             </Rectangle.Fill>
         </Rectangle>
         <Rectangle Fill="#FFF4F4F5" Stroke="Black" Margin="0,337,10,11" Grid.Column="1" HorizontalAlignment="Right" Width="153"/>
-        <Rectangle Fill="#FF0C83DD" Opacity=".8" Height="164" Stroke="Black" VerticalAlignment="Top" Margin="24,118,0.5,0"/>
+        <Rectangle Fill="#FF1F8BDC" Opacity=".8" Height="164" Stroke="Black" VerticalAlignment="Top" Margin="24,118,0.5,0"/>
 
         <Rectangle Opacity=".75" Height="88" Margin="10,10,10,0" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2" Fill="#FF0C83DD"/>
         <Image x:Name="image" HorizontalAlignment="Left" Height="88" Margin="10,10,0,0" VerticalAlignment="Top" Width="96" Source="C:\Users\ttrub\source\repos\ATBGEBot\ATBGEBot\Resources\twitterlogo.png">
@@ -41,17 +41,19 @@
         <RichTextBox Background="#FF141414" Opacity=".75" BorderBrush="#FF020000" x:Name="consoleTBox" Margin="10,314,163,11" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace" Foreground="GhostWhite">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="Timer"/>
+                    <Run Text="Application Output (scrollable)"/>
+                </Paragraph>
+                <Paragraph>
+                    <InlineUIContainer/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Label FontFamily="Comic Sans MS" x:Name="label" Content="Console" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top" Foreground="GhostWhite"/>
+        <Label FontFamily="Comic Sans MS" x:Name="label" Content="Twitter Output Log" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top" Foreground="GhostWhite"/>
         <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="39.5,247,0,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Width="177" Foreground="GhostWhite"/>
         <Rectangle x:Name="imgCntr" Fill="#FF0C83DD" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
         <Button x:Name="btnImgNext" Background="#FF0C83DD" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Right" Width="90" Foreground="GhostWhite"/>
         <Button x:Name="btnImgPrev" Background="#FF0C83DD" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Left" Width="90" Foreground="GhostWhite"/>
-        <Label x:Name="lastRunLabel" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Turned on at: OFF" Margin="106,10,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Foreground="GhostWhite"/>
-        <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Margin="16,18,70,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="140"/>
+        <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" Content="Not logged into twitter yet." FontFamily="Arial Black" Margin="116,43,70,0" VerticalAlignment="Top" Height="29" Foreground="GhostWhite" Grid.ColumnSpan="2"/>
         <ComboBox x:Name="startTCBox" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19" Text="08:00:00">
             <ComboBoxItem Content="05:00:00"/>
             <ComboBoxItem Content="06:00:00"/>
@@ -97,14 +99,17 @@
             </StackPanel.RenderTransform>
         </StackPanel>
         <Button x:Name="btnBegin" Content="Begin" Margin="36,252,10,0" VerticalAlignment="Top" Click="btnBegin_Click"/>
-        <Image Stretch="Uniform" x:Name="imageBox" Margin="41,119,24,0" Height="102" VerticalAlignment="Top" Grid.Column="1" OpacityMask="Black"/>
+        <Image Stretch="Uniform" x:Name="imageBox" Margin="41,119,24,0" Height="102" VerticalAlignment="Top" Grid.Column="1" OpacityMask="Black" MouseLeftButtonDown="imageBox_MouseLeftButtonDown"/>
         <GroupBox x:Name="timerGB" Header="Timer" HorizontalAlignment="Left" Margin="11,10,0,0" Width="100" Height="79" VerticalAlignment="Top" Foreground="GhostWhite">
             <StackPanel Margin="-6,-7,-6,-5">
-                <Label x:Name="lblNextUploadA" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Next upload:" VerticalAlignment="Top" FontSize="9.5" Height="20" Foreground="GhostWhite"/>
-                <Label x:Name="lblNextUploadTime" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" FontSize="9.5" Height="22" VerticalAlignment="Top" Foreground="GhostWhite"/>
-                <Label x:Name="lblTimer" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Time" VerticalAlignment="Top" FontSize="9.5" Foreground="GhostWhite"/>
+                <Label x:Name="lblNextUploadA" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Next upload:" VerticalAlignment="Top" FontSize="9.5" Height="19" Foreground="GhostWhite"/>
+                <Label x:Name="lblNextUploadTime" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="(Not running yet)" FontSize="9.5" Height="22" VerticalAlignment="Top" Foreground="GhostWhite"/>
+                <Label x:Name="lblTimer" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Loading..." VerticalAlignment="Top" FontSize="9.5" Foreground="GhostWhite"/>
             </StackPanel>
         </GroupBox>
+        <Label x:Name="lastRunLabel" FontFamily="Arial Black" HorizontalContentAlignment="Center" Content="Turned on at: OFF" Margin="106,10,70,419" Grid.ColumnSpan="2" Foreground="GhostWhite"/>
+        <Ellipse Fill="#FFB6D9F3" Stroke="Black" HorizontalAlignment="Left" Width="61" Height="62" VerticalAlignment="Bottom" MouseDown="mysteryMenu_OpenHandler"/>
+        <Image x:Name="questionPrompt" HorizontalAlignment="Center" Margin="20,0,99,16" Width="20" Source="transpQuestionMarkBlue.png" Height="30" VerticalAlignment="Bottom" MouseDown="mysteryMenu_OpenHandler"/>
 
     </Grid>
 </Window>
