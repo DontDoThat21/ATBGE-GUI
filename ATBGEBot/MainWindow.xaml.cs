@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,8 +59,8 @@ namespace ATBGEBot
         {           
             InitializeComponent();
             imageIndex = CheckForImage("BOOT");
-            startTCBox.SelectedIndex = 0;
-            endTCBox.SelectedIndex = endTCBox.Items.Count-5;
+            //startTCBox.SelectedIndex = 0;
+            //endTCBox.SelectedIndex = endTCBox.Items.Count-5;
             StartTimer();
         }
 
@@ -326,7 +327,7 @@ namespace ATBGEBot
             totalRequestedUploads = int.Parse(totalPicTBox.Text);
             dayAt = DateTime.Now;
             dayFirstRun = DateTime.Now;
-            lastRunLabel.Content = "Turned on at: " + dayFirstRun.ToShortDateString();
+            lastRunLabel.Content = "Turned on at: " + dayFirstRun.ToShortTimeString() + " " + dayFirstRun.Month.ToString() + "/" + dayFirstRun.Day.ToString();
 
             if (running == true)
             {
@@ -360,23 +361,30 @@ namespace ATBGEBot
                 && dateCounter <= int.Parse(totalPicTBox.Text)-1
                 && running == true) // The total pictures the user enters, say 5, isn't == to the index for the date array associated for each upload since 0 based.
             {
-                if (DateTime.Now > dates[dateCounter]) // was not -1
+                try
                 {
-                    if (dateCounter >= totalRequestedUploads) // was +1
+                    if (DateTime.Now > dates[dateCounter]) // was not -1
                     {
-                        // i dont believe anything should exec.
-                    }
-                    else
-                    {                
-                        UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
-                        if (dateCounter == totalRequestedUploads)
+                        if (dateCounter >= totalRequestedUploads) // was +1
                         {
+                            // i dont believe anything should exec.
                         }
                         else
                         {
-                            dateCounter++;
+                            UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
+                            if (dateCounter == totalRequestedUploads)
+                            {
+                            }
+                            else
+                            {
+                                dateCounter++;
+                            }
                         }
                     }
+                }
+                catch (NullReferenceException ex)
+                {
+                    dates = UploadDelaySet(imageList.Count, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
                 }
             }
             else if (DateTime.Now.DayOfWeek.ToString().Equals(dayAt.DayOfWeek.ToString()) == false) // If the day we clicked the begin is not the same day as the current tick of the timer.. we must have reset. It's probably midnight. Lets reget our photos for the day, AND set up our timers given last params.
@@ -482,7 +490,7 @@ namespace ATBGEBot
                         Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
                         PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
                     });
-                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToLongDateString()}.");
+                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString()}.");
                     StackPanel stackPanel = new StackPanel();
                     try
                     {
@@ -628,7 +636,7 @@ namespace ATBGEBot
             catch (Exception ex)
             {
                 MessageBox.Show($"Somehow failed to open the image at {Environment.SpecialFolder.MyDocuments + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg"} Please contact a developer. May be because file is not a JPG and is another format? {ex.Message}.", "Error!");
-                consoleTBox.AppendText($"Failed opening image {Environment.SpecialFolder.MyDocuments + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg"} at {DateTime.Now.ToLongDateString()}");
+                consoleTBox.AppendText($"Failed opening image {Environment.SpecialFolder.MyDocuments + "\\ATBGEBot\\" + "temp" + imageIndex.ToString() + ".jpg"} at {DateTime.Now.ToShortTimeString() + DateTime.Now.ToShortDateString()}");
             }
         }
 
