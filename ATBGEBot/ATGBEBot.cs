@@ -37,7 +37,7 @@ namespace InstagramATBGEBot
 
         static List<Post> posts = new List<Post>();
 
-        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
+        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
 
         public TwitterBot(string picCnt)
         {

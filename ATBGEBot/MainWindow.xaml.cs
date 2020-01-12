@@ -32,8 +32,9 @@ namespace ATBGEBot
         public List<string> imageList = new List<string>();
         int imageIndex = -2;
         public bool running = false;
+        public bool missingApiKeys;
         public DateTime[] dates;
-        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
+        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
         public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day       
         public TwitterService service;
         public Rootobject results;
@@ -47,10 +48,10 @@ namespace ATBGEBot
         //public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
         //public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
         
-        public string customerKey = "v1tlVp3XwmZhjKrmc04qRBYbc";
-        public string customerSecret = "IPbslteDjQoGNx5tJS6QNmBvoCoq65Nh2E9TPQBGDLpor1jtUr";
-        public string access_token = "947618558347022336-OXuymBoyTX3tIwziX8g51tSMtXasV7S";
-        public string access_token_secret = "2yojE4I2niAzqdM94vae6MOMIK17XDsXChFcw45iDWRe3";
+        public string apiKey = "v1tlVp3XwmZhjKrmc04qRBYbc";
+        public string apiSecret = "IPbslteDjQoGNx5tJS6QNmBvoCoq65Nh2E9TPQBGDLpor1jtUr";
+        public string accessToken = "947618558347022336-OXuymBoyTX3tIwziX8g51tSMtXasV7S";
+        public string accessTokenSecret = "2yojE4I2niAzqdM94vae6MOMIK17XDsXChFcw45iDWRe3";
 
         public DateTime dayAt;
         public DateTime dayFirstRun;
@@ -62,6 +63,16 @@ namespace ATBGEBot
             //startTCBox.SelectedIndex = 0;
             //endTCBox.SelectedIndex = endTCBox.Items.Count-5;
             StartTimer();
+            int lnchCnt = int.Parse(key.GetValue("AppLaunchCount", 0).ToString());
+            if (lnchCnt == 0)
+            {
+                key.SetValue("AppLaunchCount", lnchCnt + 1);
+                MessageBox.Show("Welcome to your automated Twitter Poster! Please set the the api keys (instructions included) at the top right before continuing. The app needs these to continue.", "Welcome!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                key.SetValue("AppLaunchCount", lnchCnt + 1);
+            }
         }
 
         private async void AutomationBegin()
@@ -69,27 +80,33 @@ namespace ATBGEBot
             int totalUploads = 0;
             this.Dispatcher.Invoke(() =>
             {
-                TwitterLogin();
-                twittDot.Fill = System.Windows.Media.Brushes.Green;
-                twitterLabel.Content = "Logged into Twitter.";
-                if (dates is null)
+                missingApiKeys = TwitterLogin();
+                if (!missingApiKeys)
                 {
-                    dates = UploadDelaySet(imageList.Count, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
-                }
+                    twittDot.Fill = System.Windows.Media.Brushes.Green;
+                    twitterLabel.Content = "Logged into Twitter.";
+                    if (dates is null)
+                    {
+                        dates = UploadDelaySet(imageList.Count, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
+                    }
 
-                totalUploads = imageList.Count;
+                    totalUploads = imageList.Count;
+                }
             });
 
-            if (imageList.Count < int.Parse(totalPicTBox.Text))
+            if (!missingApiKeys)
             {
-                MessageBox.Show("How the hell did we not download enough images? The bot somehow isn't downloading enough from reddit; please contact a developer. The app will continute to run, but very buggily. This wasn't accounted for, dammit!");
-            }
-            else
-            {
-                await PopulateScheduledUploadsDrawsAsync();
-                StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[0];
-                Label child = (Label)stackPanel.Children[0];
-                lblNextUploadTime.Content = child.Content;
+                if (imageList.Count < int.Parse(totalPicTBox.Text))
+                {
+                    MessageBox.Show("How the hell did we not download enough images? The bot somehow isn't downloading enough from reddit; please contact a developer. The app will continute to run, but very buggily. This wasn't accounted for, dammit!");
+                }
+                else
+                {
+                    await PopulateScheduledUploadsDrawsAsync();
+                    StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[0];
+                    Label child = (Label)stackPanel.Children[0];
+                    lblNextUploadTime.Content = child.Content;
+                }
             }
         }
 
@@ -195,7 +212,7 @@ namespace ATBGEBot
 
         private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
         {
-            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterBotATBGE");
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
 
             for (int i = 0; i < uploadCount; i++)
             {
@@ -324,6 +341,7 @@ namespace ATBGEBot
 
         private void btnBegin_Click(object sender, RoutedEventArgs e)
         {
+            imageBox.Source = null;
             totalRequestedUploads = int.Parse(totalPicTBox.Text);
             dayAt = DateTime.Now;
             dayFirstRun = DateTime.Now;
@@ -523,9 +541,57 @@ namespace ATBGEBot
             }
         }
 
-        public void TwitterLogin()
+        public bool TwitterLogin()
         {
-            service = new TwitterService(customerKey, customerSecret, access_token, access_token_secret);
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
+            apiKey = key.GetValue("ApiKey", "EmptyAPIK!").ToString(); // Gets the key, if it's exist. If it doesn't? Returns "Empty!" as a string.
+            apiSecret = key.GetValue("ApiSecret", "EmptyAPIS!").ToString();
+            accessToken = key.GetValue("AccessToken", "EmptyACCT!").ToString();
+            accessTokenSecret = key.GetValue("AccessTokenSecret", "EmptyACCTS!").ToString();
+            bool failedKeys = false;
+
+            string[] keys = new string[]
+            {
+                apiKey,
+                apiSecret,
+                accessToken,
+                accessTokenSecret
+            };
+
+            for (int i = 0; i < keys.Length; i++) // lets loop through the params and make sure alls
+            {
+                if (keys[i] == "EmptyAPIK!" || keys[i] == "EmptyAPIS!" || keys[i] == "EmptyACCT!" || keys[i] == "EmptyACCTS!")
+                {
+                    if (keys[i] == "EmptyAPIK!")
+                    {
+                        MessageBox.Show(@"Missing Api key. Did you set up all four keys in the top right login clickable form? Look at registry if certain you're correct: Computer\HKEY_CURRENT_USER\Software\TwitterPoster", "Error.", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    if (keys[i] == "EmptyAPIS!")
+                    {
+                        MessageBox.Show(@"Missing Api secret. Did you set up all four keys in the top right login clickable form? Look at registry if certain you're correct: Computer\HKEY_CURRENT_USER\Software\TwitterPoster", "Error.", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    if (keys[i] == "EmptyACCT!")
+                    {
+                        MessageBox.Show(@"Missing Api key. Did you set up all four keys in the top right login clickable form? Look at registry if certain you're correct: Computer\HKEY_CURRENT_USER\Software\TwitterPoster", "Error.", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    if (keys[i] == "EmptyACCTS!")
+                    {
+                        MessageBox.Show(@"Missing Api key. Did you set up all four keys in the top right login clickable form? Look at registry if certain you're correct: Computer\HKEY_CURRENT_USER\Software\TwitterPoster", "Error.", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    failedKeys = true;
+                }
+            }
+
+            if (failedKeys)
+            {
+                MessageBox.Show("Since we have missing keys, we can't auth. with twitter. Cancelling uploads.", "Stopping.", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+            else
+            {
+                service = new TwitterService(apiKey, apiSecret, accessToken, accessTokenSecret);
+                return true;
+            }
         }
 
         static Rootobject GetJsonForToday(string imgCount)
@@ -644,6 +710,12 @@ namespace ATBGEBot
         {
             ExtrasWindow tomWindow = new ExtrasWindow();
             tomWindow.Show();
+        }
+
+        private void editTwitterLogin_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            TwitterDetails twtrDets = new TwitterDetails();
+            twtrDets.Show();
         }
     }
 }
