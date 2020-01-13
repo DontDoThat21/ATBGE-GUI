@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATBGEBot", "ATBGEBot\ATBGEBot.csproj", "{0697186E-905B-492C-A63B-0889A5C1823A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitter Poster", "ATBGEBot\Twitter Poster.csproj", "{0697186E-905B-492C-A63B-0889A5C1823A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

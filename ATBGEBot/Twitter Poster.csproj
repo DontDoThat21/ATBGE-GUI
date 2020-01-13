@@ -135,7 +135,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ATGBEModel.cs" />
+    <Compile Include="TwitterModel.cs" />
     <Compile Include="ExtrasWindow.xaml.cs">
       <DependentUpon>ExtrasWindow.xaml</DependentUpon>
     </Compile>
@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PictureProcessor.cs" />
-    <Compile Include="ATGBEbot.cs" />
+    <Compile Include="TwitterPoster.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -171,7 +171,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="ATBGEBot_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
