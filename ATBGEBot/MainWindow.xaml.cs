@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -59,6 +60,7 @@ namespace ATBGEBot
         public MainWindow()
         {           
             InitializeComponent();
+            AuditThisLogin();
             imageIndex = CheckForImage("BOOT");
             //startTCBox.SelectedIndex = 0;
             //endTCBox.SelectedIndex = endTCBox.Items.Count-5;
@@ -73,6 +75,62 @@ namespace ATBGEBot
             {
                 key.SetValue("AppLaunchCount", lnchCnt + 1);
             }
+        }
+
+        private void AuditThisLogin()
+        {
+            AppAudit.GPJ_AppAudit appAudit = new AppAudit.GPJ_AppAudit();
+
+            string[] environ = new string[]
+            {
+                "ENVIRONMENT=PROD",
+                "USERID=TWTRPSTR",
+                "FULLNAME=TWITTER POSTER"
+            };
+            string[] vars = GetAuditParams();
+
+            int major = Environment.OSVersion.Version.Major;
+            int minor = Environment.OSVersion.Version.Minor;
+            bool bitBool = Environment.Is64BitOperatingSystem; int osBit = -1;
+
+            if (bitBool)
+            {
+                osBit = 64;
+            }
+            else
+            {
+                osBit = 32;
+            }
+
+            var result = appAudit.SaveUserData(vars[0], vars[1], vars[2], vars[3], vars[4], major, minor, osBit, vars[5], vars[6], vars[7], environ);
+        }
+
+        private string[] GetAuditParams()
+        {
+            bool bitBool = Environment.Is64BitOperatingSystem; int bit = -1;
+
+            if (bitBool)
+            {
+                bit = 64;
+            }
+            else
+            {
+                bit = 32;
+            }
+
+            string[] auditVars = new string[8]
+            {
+                Environment.MachineName.Substring(0, 8),
+                "GPJ",
+                Environment.MachineName.Substring(0, 8),
+                Environment.OSVersion.ToString(),
+                Environment.OSVersion.Platform.ToString(),
+                Assembly.GetExecutingAssembly().GetName().ToString(),
+                Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                TimeZone.CurrentTimeZone.StandardName.ToString(),
+            };
+
+            return auditVars;            
         }
 
         private async void AutomationBegin()
@@ -267,29 +325,30 @@ namespace ATBGEBot
             {
                 if (passedEnvironnment == "BOOT") // We're opening the first image possible if found in the local dir created by the app.
                 {
-                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
-                    {
-                        string[] photoFileNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
-                        string pattern = @"\d";
-                        StringBuilder sb = new StringBuilder();
-                        int[] photoIndexNums = new int[photoFileNames.Length];
+                    MessageBox.Show("\"Fixed\" the issue that errored when starting was temporarily fixed, but not images won't open on start.");
+                    //if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
+                    //{
+                    //    string[] photoFileNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+                    //    string pattern = @"\d";
+                    //    StringBuilder sb = new StringBuilder();
+                    //    int[] photoIndexNums = new int[photoFileNames.Length];
 
-                        for (int i = 0; i < photoFileNames.Length; i++)
-                        {
-                            foreach (Match m in Regex.Matches(photoFileNames[i], pattern))
-                            {
-                                sb.Append(m);
-                            }
-                            photoIndexNums[i] = int.Parse(sb.ToString());
-                            sb = new StringBuilder();
-                        }
+                    //    for (int i = 0; i < photoFileNames.Length; i++)
+                    //    {
+                    //        foreach (Match m in Regex.Matches(photoFileNames[i], pattern))
+                    //        {
+                    //            sb.Append(m);
+                    //        }
+                    //        photoIndexNums[i] = int.Parse(sb.ToString());
+                    //        sb = new StringBuilder();
+                    //    }
 
-                        int lowest = photoIndexNums.Min();
+                    //    int lowest = photoIndexNums.Min();
 
-                        imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-                            + "\\ATBGEBot\\" + $"temp{lowest}.jpg"));
-                    }
-                    return 0;
+                    //    imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                    //        + "\\ATBGEBot\\" + $"temp{lowest}.jpg"));
+                    //}
+                    //return 0;
                 }
                 else if (passedEnvironnment == "NEXT")
                 {
@@ -630,7 +689,10 @@ namespace ATBGEBot
 
             int resultAmnt = (int)topToday.data.children.GetLongLength(0);
             int successfullPhotos = 0;
-            bool exists = System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
+            bool exists = System.IO.Directory.Exists(
+                
+                
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
             DirectoryInfo dir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
 
             if (exists)

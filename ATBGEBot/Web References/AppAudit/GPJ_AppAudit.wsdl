@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="https://gpjws.gpjco.com/GPJ_AppAudit" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="https://gpjws.gpjco.com/GPJ_AppAudit" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Contains web method that primarily audits permissions and returns various info about the login attemptees details.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="https://gpjws.gpjco.com/GPJ_AppAudit">
+      <s:element name="SaveUserData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pUserDomain" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pMachineName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pOSVersion" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pOSPlatform" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="pOSMajor" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pOSMinor" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pOSBit" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="pAppName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pAppVersion" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pUserZone" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SaveUserDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveUserDataResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppWishListLike">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pAppID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pWishID" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppWishListLikeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AppWishListLikeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppWishListCount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pAppID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppWishListCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppWishListCountResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppWishList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pAppID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppWishListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppWishListResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseAppWishItem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pAppID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pWishID" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseAppWishItemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CloseAppWishItemResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveAppWishItem">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pAppID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pWishID" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="pWishType" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="pWishNote" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveAppWishItemResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveAppWishItemResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSeqId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pSeq" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSeqIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetSeqIdResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppUsage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pAppName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="pFromDate" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppUsageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppUsageResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pUserSeqID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pYear" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppSupportResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupportDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pUserSeqID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pYear" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="pApp" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupportDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppSupportDetailsResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupportByMonth">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="pUserSeqID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="pYear" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppSupportByMonthResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppSupportByMonthResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SaveUserDataSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveUserData" />
+  </wsdl:message>
+  <wsdl:message name="SaveUserDataSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveUserDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="AppWishListLikeSoapIn">
+    <wsdl:part name="parameters" element="tns:AppWishListLike" />
+  </wsdl:message>
+  <wsdl:message name="AppWishListLikeSoapOut">
+    <wsdl:part name="parameters" element="tns:AppWishListLikeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppWishListCountSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppWishListCount" />
+  </wsdl:message>
+  <wsdl:message name="GetAppWishListCountSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppWishListCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppWishListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppWishList" />
+  </wsdl:message>
+  <wsdl:message name="GetAppWishListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppWishListResponse" />
+  </wsdl:message>
+  <wsdl:message name="CloseAppWishItemSoapIn">
+    <wsdl:part name="parameters" element="tns:CloseAppWishItem" />
+  </wsdl:message>
+  <wsdl:message name="CloseAppWishItemSoapOut">
+    <wsdl:part name="parameters" element="tns:CloseAppWishItemResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveAppWishItemSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveAppWishItem" />
+  </wsdl:message>
+  <wsdl:message name="SaveAppWishItemSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveAppWishItemResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSeqIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSeqId" />
+  </wsdl:message>
+  <wsdl:message name="GetSeqIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSeqIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppUsageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppUsage" />
+  </wsdl:message>
+  <wsdl:message name="GetAppUsageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppUsageResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppSupport" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppSupportResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppSupportDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppSupportDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportByMonthSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppSupportByMonth" />
+  </wsdl:message>
+  <wsdl:message name="GetAppSupportByMonthSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppSupportByMonthResponse" />
+  </wsdl:message>
+  <wsdl:portType name="GPJ_AppAuditSoap">
+    <wsdl:operation name="SaveUserData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This function saves user data to Oracle each time a user attempts, successfully or not, to login to an enabled application.</wsdl:documentation>
+      <wsdl:input message="tns:SaveUserDataSoapIn" />
+      <wsdl:output message="tns:SaveUserDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppWishListLike">
+      <wsdl:input message="tns:AppWishListLikeSoapIn" />
+      <wsdl:output message="tns:AppWishListLikeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishListCount">
+      <wsdl:input message="tns:GetAppWishListCountSoapIn" />
+      <wsdl:output message="tns:GetAppWishListCountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishList">
+      <wsdl:input message="tns:GetAppWishListSoapIn" />
+      <wsdl:output message="tns:GetAppWishListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CloseAppWishItem">
+      <wsdl:input message="tns:CloseAppWishItemSoapIn" />
+      <wsdl:output message="tns:CloseAppWishItemSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveAppWishItem">
+      <wsdl:input message="tns:SaveAppWishItemSoapIn" />
+      <wsdl:output message="tns:SaveAppWishItemSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSeqId">
+      <wsdl:input message="tns:GetSeqIdSoapIn" />
+      <wsdl:output message="tns:GetSeqIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppUsage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Simple web method that gets app usage.</wsdl:documentation>
+      <wsdl:input message="tns:GetAppUsageSoapIn" />
+      <wsdl:output message="tns:GetAppUsageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupport">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the master color that is associated with the table, ontop of the masterid from ENG_TASK_MASTER table.</wsdl:documentation>
+      <wsdl:input message="tns:GetAppSupportSoapIn" />
+      <wsdl:output message="tns:GetAppSupportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportDetails">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves app support details including the hours, comments, task name for a given app.</wsdl:documentation>
+      <wsdl:input message="tns:GetAppSupportDetailsSoapIn" />
+      <wsdl:output message="tns:GetAppSupportDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportByMonth">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Same as GetAppSupp but delimited by month.</wsdl:documentation>
+      <wsdl:input message="tns:GetAppSupportByMonthSoapIn" />
+      <wsdl:output message="tns:GetAppSupportByMonthSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GPJ_AppAuditSoap" type="tns:GPJ_AppAuditSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SaveUserData">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/SaveUserData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppWishListLike">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/AppWishListLike" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishListCount">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppWishListCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishList">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppWishList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseAppWishItem">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/CloseAppWishItem" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveAppWishItem">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/SaveAppWishItem" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSeqId">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetSeqId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppUsage">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppUsage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupport">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportDetails">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupportDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportByMonth">
+      <soap:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupportByMonth" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GPJ_AppAuditSoap12" type="tns:GPJ_AppAuditSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SaveUserData">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/SaveUserData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppWishListLike">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/AppWishListLike" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishListCount">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppWishListCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppWishList">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppWishList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseAppWishItem">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/CloseAppWishItem" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveAppWishItem">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/SaveAppWishItem" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSeqId">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetSeqId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppUsage">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppUsage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupport">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportDetails">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupportDetails" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppSupportByMonth">
+      <soap12:operation soapAction="https://gpjws.gpjco.com/GPJ_AppAudit/GetAppSupportByMonth" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GPJ_AppAudit">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Contains web method that primarily audits permissions and returns various info about the login attemptees details.</wsdl:documentation>
+    <wsdl:port name="GPJ_AppAuditSoap" binding="tns:GPJ_AppAuditSoap">
+      <soap:address location="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GPJ_AppAuditSoap12" binding="tns:GPJ_AppAuditSoap12">
+      <soap12:address location="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

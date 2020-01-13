@@ -1,7 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ATBGEBot.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ATBGEBot_AppAudit_GPJ_AppAudit" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
