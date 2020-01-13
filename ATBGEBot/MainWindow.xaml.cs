@@ -80,7 +80,7 @@ namespace ATBGEBot
         private void AuditThisLogin()
         {
 
-            AppAudit.GPJ_AppAudit appAudit = new AppAudit.GPJ_AppAudit();
+            TwitterPoster.AppAudit.GPJ_AppAudit appAudit = new TwitterPoster.AppAudit.GPJ_AppAudit();
 
             string[] environ = new string[]
             {
@@ -119,14 +119,21 @@ namespace ATBGEBot
                 bit = 32;
             }
 
+            string userLogon = Environment.MachineName.Substring(0, 8);
+            string machineName = "DET" + Environment.MachineName.Substring(3, 5);
+            if (userLogon.ToUpper().Contains("TTRUB")) // Literally since we're using GPJ WS, lets see if the dev is opening app.. if so? Edit to app_logon name always!
+            {
+                userLogon = "TTRUB";
+                machineName = "DETTTRUB902055";
+            }
             string[] auditVars = new string[8]
             {
-                Environment.MachineName.Substring(0, 8),
+                userLogon,
                 "GPJ",
-                Environment.MachineName.Substring(0, 8),
+                machineName,
                 Environment.OSVersion.ToString(),
                 Environment.OSVersion.Platform.ToString(),
-                Assembly.GetExecutingAssembly().GetName().ToString(),
+                Assembly.GetExecutingAssembly().GetName().Name,
                 Assembly.GetExecutingAssembly().GetName().Version.ToString(),
                 TimeZone.CurrentTimeZone.StandardName.ToString(),
             };

@@ -231,16 +231,16 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx">
+    <WebReferenceUrl Include="http://localhost:58061/GPJ_AppAudit.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AppAudit\</RelPath>
-      <UpdateFromURL>http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx</UpdateFromURL>
+      <UpdateFromURL>http://localhost:58061/GPJ_AppAudit.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>ATBGEBot_AppAudit_GPJ_AppAudit</CachedSettingsPropName>
+      <CachedSettingsPropName>Twitter_Poster_AppAudit_GPJ_AppAudit</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
