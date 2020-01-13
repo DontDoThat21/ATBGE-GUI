@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace ATBGEBot.AppAudit {
+namespace TwitterPoster.AppAudit {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -55,7 +55,7 @@ namespace ATBGEBot.AppAudit {
         
         /// <remarks/>
         public GPJ_AppAudit() {
-            this.Url = global::ATBGEBot.Properties.Settings.Default.ATBGEBot_AppAudit_GPJ_AppAudit;
+            this.Url = global::TwitterPoster.Properties.Settings.Default.ATBGEBot_AppAudit_GPJ_AppAudit;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
