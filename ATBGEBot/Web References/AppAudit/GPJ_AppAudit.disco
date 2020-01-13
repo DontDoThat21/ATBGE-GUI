@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
-  <contractRef ref="http://localhost:58061/GPJ_AppAudit.asmx?wsdl" docRef="http://localhost:58061/GPJ_AppAudit.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
-  <soap address="http://localhost:58061/GPJ_AppAudit.asmx" xmlns:q1="https://gpjws.gpjco.com/GPJ_AppAudit" binding="q1:GPJ_AppAuditSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
-  <soap address="http://localhost:58061/GPJ_AppAudit.asmx" xmlns:q2="https://gpjws.gpjco.com/GPJ_AppAudit" binding="q2:GPJ_AppAuditSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <contractRef ref="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx?wsdl" docRef="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx" xmlns:q1="https://gpjws.gpjco.com/GPJ_AppAudit" binding="q1:GPJ_AppAuditSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx" xmlns:q2="https://gpjws.gpjco.com/GPJ_AppAudit" binding="q2:GPJ_AppAuditSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
 </discovery>

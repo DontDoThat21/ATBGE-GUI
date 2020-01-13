@@ -231,10 +231,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://localhost:58061/GPJ_AppAudit.asmx">
+    <WebReferenceUrl Include="http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\AppAudit\</RelPath>
-      <UpdateFromURL>http://localhost:58061/GPJ_AppAudit.asmx</UpdateFromURL>
+      <UpdateFromURL>http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

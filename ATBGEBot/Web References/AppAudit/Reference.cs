@@ -41,6 +41,8 @@ namespace TwitterPoster.AppAudit {
         
         private System.Threading.SendOrPostCallback SaveAppWishItemOperationCompleted;
         
+        private System.Threading.SendOrPostCallback GetSeqIdOperationCompleted;
+        
         private System.Threading.SendOrPostCallback GetAppUsageOperationCompleted;
         
         private System.Threading.SendOrPostCallback GetAppSupportOperationCompleted;
@@ -104,6 +106,9 @@ namespace TwitterPoster.AppAudit {
         
         /// <remarks/>
         public event SaveAppWishItemCompletedEventHandler SaveAppWishItemCompleted;
+        
+        /// <remarks/>
+        public event GetSeqIdCompletedEventHandler GetSeqIdCompleted;
         
         /// <remarks/>
         public event GetAppUsageCompletedEventHandler GetAppUsageCompleted;
@@ -330,6 +335,35 @@ namespace TwitterPoster.AppAudit {
             if ((this.SaveAppWishItemCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SaveAppWishItemCompleted(this, new SaveAppWishItemCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://gpjws.gpjco.com/GPJ_AppAudit/GetSeqId", RequestNamespace="https://gpjws.gpjco.com/GPJ_AppAudit", ResponseNamespace="https://gpjws.gpjco.com/GPJ_AppAudit", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public long GetSeqId(string pSeq) {
+            object[] results = this.Invoke("GetSeqId", new object[] {
+                        pSeq});
+            return ((long)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetSeqIdAsync(string pSeq) {
+            this.GetSeqIdAsync(pSeq, null);
+        }
+        
+        /// <remarks/>
+        public void GetSeqIdAsync(string pSeq, object userState) {
+            if ((this.GetSeqIdOperationCompleted == null)) {
+                this.GetSeqIdOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetSeqIdOperationCompleted);
+            }
+            this.InvokeAsync("GetSeqId", new object[] {
+                        pSeq}, this.GetSeqIdOperationCompleted, userState);
+        }
+        
+        private void OnGetSeqIdOperationCompleted(object arg) {
+            if ((this.GetSeqIdCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetSeqIdCompleted(this, new GetSeqIdCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -630,6 +664,32 @@ namespace TwitterPoster.AppAudit {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
+    public delegate void GetSeqIdCompletedEventHandler(object sender, GetSeqIdCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetSeqIdCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetSeqIdCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public long Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((long)(this.results[0]));
             }
         }
     }

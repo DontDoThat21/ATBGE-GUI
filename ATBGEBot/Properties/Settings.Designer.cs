@@ -26,7 +26,7 @@ namespace TwitterPoster.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:58061/GPJ_AppAudit.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx")]
         public string Twitter_Poster_AppAudit_GPJ_AppAudit {
             get {
                 return ((string)(this["Twitter_Poster_AppAudit_GPJ_AppAudit"]));

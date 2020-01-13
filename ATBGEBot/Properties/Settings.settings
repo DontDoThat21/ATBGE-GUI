@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Twitter_Poster_AppAudit_GPJ_AppAudit" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://localhost:58061/GPJ_AppAudit.asmx</Value>
+      <Value Profile="(Default)">http://gpjwsdev.gpjco.com/GPJ_AppAudit/GPJ_AppAudit.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>
