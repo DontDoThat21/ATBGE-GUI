@@ -8,9 +8,11 @@ namespace ATBGEBot
 {
     public class Post
     {
-        public string url { get; set; }
-        public bool is_video { get; set; }
+        public string Url { get; set; }
+        public string title { get; set; }
+        public bool isVideo { get; set; }
         public string author { get; set; }
+        public bool over18 { get; set; }
 
     }
 }

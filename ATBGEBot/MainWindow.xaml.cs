@@ -4,13 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,6 +40,7 @@ namespace ATBGEBot
         private int dateCounter = 0;
         public int whatUploadWereOn = 0;
         public int lastSuccessPhotoCount;
+        public int videoOffset = 0;
         //public string customerKey = "NwhE01jkavtSX5I6gfGmD1Qho";
         //public string customerSecret = "oUtI7fqxdUf7u2aIGBmxqnPxND2tUrJlKjEG2L9Cc5kb3jii7P";
         //public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
@@ -168,7 +165,7 @@ namespace ATBGEBot
                 }
                 else
                 {
-                    await PopulateScheduledUploadsDrawsAsync();
+                    PopulateScheduledUploadsDraws();
                     StackPanel stackPanel = (StackPanel)OuterStackPanel.Children[0];
                     Label child = (Label)stackPanel.Children[0];
                     lblNextUploadTime.Content = child.Content;
@@ -176,58 +173,10 @@ namespace ATBGEBot
             }
         }
 
-        public async Task PopulateScheduledUploadsDrawsAsync()
+        public void PopulateScheduledUploadsDraws()
         {
-                await Task.Run(() => panelTimeChildAdd(totalRequestedUploads));
+                panelTimeChildAdd(totalRequestedUploads);
         }
-
-        //private void GetImagesFromUrls(List<string> urlsFromJson)
-        //{
-        //    System.Drawing.Image[] images = DownloadImagesFromUrls(urlsFromJson); // new Image[totalUploads]; // image array returned.
-        //    if (images != null)
-        //    {
-        //        glblImgs = new List<System.Drawing.Image>();
-        //        foreach (System.Drawing.Image img in images)
-        //            glblImgs.Add(img);
-
-        //        for (int i = 0; i < glblImgs.Count; i++)
-        //        {
-        //            try
-        //            {
-        //                this.Dispatcher.Invoke(() =>
-        //                {
-        //                    imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-        //                "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
-        //                });
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show($"Error setting image box source. Did we find a video? {ex.Message}");
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private System.Drawing.Image[] DownloadImagesFromUrls(List<string> urls)
-        //{
-        //    System.Drawing.Image[] imagesReturned = new System.Drawing.Image[urls.Count];
-
-        //    for (int i = 0; i < urls.Count; i++)
-        //    {
-        //        HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(urls[0]);
-        //        webRequest.AllowWriteStreamBuffering = true;
-        //        webRequest.Timeout = 45000;
-                
-        //        WebResponse webResponse = webRequest.GetResponse();
-                
-        //        Stream stream = webResponse.GetResponseStream();
-                
-        //        imagesReturned[i] = System.Drawing.Image.FromStream(stream);
-        //    }            
-
-            
-        //    return imagesReturned;
-        //}
 
         private void TotalPicTBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -279,6 +228,7 @@ namespace ATBGEBot
         private void panelTimeChildAdd(int uploadCount) // Upload count lets us know a ton of useful info, like how many registry vals to search/add.
         {
             RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
+            var brsh = new SolidColorBrush(Color.FromArgb(20, 78, 155, 241));
 
             for (int i = 0; i < uploadCount; i++)
             {
@@ -300,7 +250,7 @@ namespace ATBGEBot
                     lbl.FontSize = 9;
                     lbl.Height = 35;
                     lbl.Padding = new Thickness(10);
-                    lbl.Background = System.Windows.Media.Brushes.CadetBlue;
+                    lbl.Background = brsh;
                     lbl.HorizontalContentAlignment = HorizontalAlignment.Center;
 
                     Rectangle rct = new Rectangle();
@@ -322,7 +272,6 @@ namespace ATBGEBot
                     OuterStackPanel.Children.Add(spL);
                 });
             }
-
         }
         
         private int CheckForImage(string passedEnvironnment)
@@ -333,7 +282,8 @@ namespace ATBGEBot
             {
                 if (passedEnvironnment == "BOOT") // We're opening the first image possible if found in the local dir created by the app.
                 {
-                    MessageBox.Show("\"Fixed\" the issue that errored when starting was temporarily fixed, but not images won't open on start.");
+                    //MessageBox.Show("\"Fixed\" the issue that errored when starting was temporarily fixed, but not images won't open on start.");
+                    return 0;
                     //if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot"))
                     //{
                     //    string[] photoFileNames = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ATBGEBot");
@@ -408,8 +358,10 @@ namespace ATBGEBot
 
         private void btnBegin_Click(object sender, RoutedEventArgs e)
         {
+            //OuterStackPanel = new StackPanel();
             imageBox.Source = null;
             totalRequestedUploads = int.Parse(totalPicTBox.Text);
+            dates = UploadDelaySet(imageList.Count, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text));
             dayAt = DateTime.Now;
             dayFirstRun = DateTime.Now;
             lastRunLabel.Content = "Turned on at: " + dayFirstRun.ToShortTimeString() + " " + dayFirstRun.Month.ToString() + "/" + dayFirstRun.Day.ToString();
@@ -417,16 +369,18 @@ namespace ATBGEBot
             if (running == true)
             {
                 running = false;
-                btnBegin.Content = "Begin";
+                btnBegin.Content = "Begin";                
             }
             else if (running == false)
             {
+                PopulateScheduledUploadsDraws();
                 running = true;
                 results = GetJsonForToday(totalPicTBox.Text);
                 TwitterLogin();
                 GetImagesFromResults(results);
                 AutomationBegin();
                 btnBegin.Content = "Stop";
+                dateCounter = 0;
                 //StartTimer();
             }
         }
@@ -456,7 +410,7 @@ namespace ATBGEBot
                         }
                         else
                         {
-                            UploadPic(results, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
+                            UploadPic(posts, DateTime.Parse(startTCBox.Text), DateTime.Parse(endTCBox.Text), imageIndex);
                             if (dateCounter == totalRequestedUploads)
                             {
                             }
@@ -542,7 +496,7 @@ namespace ATBGEBot
             //await Task.Delay(closestVal); // closestVal
         }
 
-        public void UploadPic(Rootobject pic, DateTime startT, DateTime endT, int imageOfResultsIndex)
+        public void UploadPic(List<Post> posts, DateTime startT, DateTime endT, int imageOfResultsIndex)
         {            
             for (int i = 0; i < dates.Length; i++)
             {
@@ -553,10 +507,10 @@ namespace ATBGEBot
 
             try
             {
-                if (pic.data.children[imageOfResultsIndex].data.url.Contains("imgur"))
+                if (posts[imageOfResultsIndex].Url.Contains("imgur"))
                 {
-                    pic.data.children[imageOfResultsIndex].data.url = pic.data.children[imageOfResultsIndex].data.url.Insert(8, "i.");
-                    pic.data.children[imageOfResultsIndex].data.url = pic.data.children[imageOfResultsIndex].data.url + ".jpg";
+                    posts[imageOfResultsIndex].Url = posts[imageOfResultsIndex].Url.Insert(8, "i.");
+                    posts[imageOfResultsIndex].Url = posts[imageOfResultsIndex].Url + ".jpg"; // Tried, but never seen an imgur link fail to open with jpg. So, hard coding.
                 }
             }
             catch (Exception)
@@ -565,36 +519,55 @@ namespace ATBGEBot
             }
             System.Drawing.Bitmap photo;
 
-            using (var stream = new FileStream(imageList[imageOfResultsIndex], FileMode.Open))
+            bool failedAtFirstUp = false;
+            if (imageOfResultsIndex - videoOffset < 0)
             {
+                imageOfResultsIndex++;
+                failedAtFirstUp = true;
+            }
+            using (var stream = new FileStream(imageList[imageOfResultsIndex - videoOffset], FileMode.Open))
+            {
+                if (failedAtFirstUp)
+                {
+                    imageOfResultsIndex--;
+                }
                 try
                 {
-                    service.SendTweetWithMedia(new SendTweetWithMediaOptions
+                    if (posts[imageOfResultsIndex].isVideo == true)
                     {
-                        Status = pic.data.children[imageOfResultsIndex].data.title + "; Uploaded by /u/" + pic.data.children[imageOfResultsIndex].data.author + ". https://www.reddit.com/r/ATBGE/",
-                        Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex], stream } },
-                        PossiblySensitive = pic.data.children[imageOfResultsIndex].data.over_18
-                    });
-                    consoleTBox.AppendText($"\nUploaded {pic.data.children[imageOfResultsIndex].data.title} at {DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString()}.");
-                    StackPanel stackPanel = new StackPanel();
-                    try
-                    {
-                        stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                        imageOfResultsIndex++; // Skip videos for now.
                     }
-                    catch (ArgumentOutOfRangeException ex)
+                    else
                     {
-                        PopulateScheduledUploadsDrawsAsync();
-                    }
-                    Rectangle child = (Rectangle)stackPanel.Children[1];
-                    child.Fill = Brushes.Green;
-                    //item.Stroke = Brushes.Green;
-                    // do some magic and bullshit with the panel generated.
-                    uploadCountLabel.Content = $"Photos uploaded: {imageIndex + 1}";
+                        service.SendTweetWithMedia(new SendTweetWithMediaOptions
+                        {
+                            Status = posts[imageOfResultsIndex].title + "; Uploaded by /u/" + posts[imageOfResultsIndex].author + ". https://www.reddit.com/r/ATBGE/",
+                            Images = new Dictionary<string, Stream> { { imageList[imageOfResultsIndex - videoOffset], stream } },
+                            PossiblySensitive = posts[imageOfResultsIndex].over18
+                        });
+                        consoleTBox.AppendText($"\nUploaded {posts[imageOfResultsIndex].title} at {DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString()}.");
+                        StackPanel stackPanel = new StackPanel();
+                        try
+                        {
+                            stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                        }
+                        catch (ArgumentOutOfRangeException ex)
+                        {
+                            PopulateScheduledUploadsDraws();
+                            stackPanel = (StackPanel)OuterStackPanel.Children[imageOfResultsIndex];
+                        }
+                        Rectangle child = (Rectangle)stackPanel.Children[1];
+                        child.Fill = Brushes.Green;
+                        //item.Stroke = Brushes.Green;
+                        // do some magic and bullshit with the panel generated.
+                        uploadCountLabel.Content = $"Photos uploaded: {imageIndex + 1}";
+                        uploadRemainLabel.Content = $"Remaining: {totalRequestedUploads - (imageIndex + 1)}";
+                    }                    
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException vidErr)
                 {
-                    errConsoleOutPut += ("Null reference error when uploading to reddit.com" + pic.data.children[imageOfResultsIndex].data.permalink) + "\n";
-                    errConsoleOutPut += $"Is_video: {pic.data.children[imageOfResultsIndex].data.is_video}; \n";
+                    errConsoleOutPut += ("Null reference error when uploading to reddit.com" + posts[imageOfResultsIndex].Url) + "\n";
+                    errConsoleOutPut += $"Is_video: {posts[imageOfResultsIndex].isVideo}; \n";
                     errConsoleOutPut += $"Trying to post this local file: {imageList[imageOfResultsIndex]} \n";
                 }
             }
@@ -661,7 +634,7 @@ namespace ATBGEBot
             }
         }
 
-        static Rootobject GetJsonForToday(string imgCount)
+        Rootobject GetJsonForToday(string imgCount)
         {
             int paddedResultCount = int.Parse(imgCount) + 10;
 
@@ -671,14 +644,18 @@ namespace ATBGEBot
             Rootobject objectResponse;
             try
             {
-                Post redditPost = new Post();
                 objectResponse = JsonConvert.DeserializeObject<Rootobject>(json);
                 foreach (var item in objectResponse.data.children)
                 {
                     Post post = new Post();
+                    post.title = item.data.title;
                     post.author = item.data.author;
-                    post.is_video = item.data.is_video;
-                    post.url = item.data.url;
+                    post.Url = item.data.url;
+                    post.isVideo = item.data.is_video;
+                    if (post.isVideo)
+                    {
+                        videoOffset++;
+                    }
                     posts.Add(post);
                 }
                 return objectResponse;
@@ -787,5 +764,53 @@ namespace ATBGEBot
             TwitterDetails twtrDets = new TwitterDetails();
             twtrDets.Show();
         }
+
+        //private void GetImagesFromUrls(List<string> urlsFromJson)
+        //{
+        //    System.Drawing.Image[] images = DownloadImagesFromUrls(urlsFromJson); // new Image[totalUploads]; // image array returned.
+        //    if (images != null)
+        //    {
+        //        glblImgs = new List<System.Drawing.Image>();
+        //        foreach (System.Drawing.Image img in images)
+        //            glblImgs.Add(img);
+
+        //        for (int i = 0; i < glblImgs.Count; i++)
+        //        {
+        //            try
+        //            {
+        //                this.Dispatcher.Invoke(() =>
+        //                {
+        //                    imageBox.Source = new BitmapImage(new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+        //                "\\ATBGEBot\\" + "temp" + i.ToString() + ".jpg"));
+        //                });
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show($"Error setting image box source. Did we find a video? {ex.Message}");
+        //            }
+        //        }
+        //    }
+        //}
+
+        //private System.Drawing.Image[] DownloadImagesFromUrls(List<string> urls)
+        //{
+        //    System.Drawing.Image[] imagesReturned = new System.Drawing.Image[urls.Count];
+
+        //    for (int i = 0; i < urls.Count; i++)
+        //    {
+        //        HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(urls[0]);
+        //        webRequest.AllowWriteStreamBuffering = true;
+        //        webRequest.Timeout = 45000;
+
+        //        WebResponse webResponse = webRequest.GetResponse();
+
+        //        Stream stream = webResponse.GetResponseStream();
+
+        //        imagesReturned[i] = System.Drawing.Image.FromStream(stream);
+        //    }            
+
+
+        //    return imagesReturned;
+        //}
     }
 }

@@ -102,7 +102,8 @@
             <s:element minOccurs="1" maxOccurs="1" name="pWishID" type="s:long" />
             <s:element minOccurs="1" maxOccurs="1" name="pWishType" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="pWishNote" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="pENVIRONMENT" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="pENVIRON
+                       MENT" type="tns:ArrayOfString" />
           </s:sequence>
         </s:complexType>
       </s:element>

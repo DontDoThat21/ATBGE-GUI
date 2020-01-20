@@ -38,7 +38,7 @@
             </Image.OpacityMask>
         </Image>
         <Ellipse Grid.Column="1" Fill="Red" Height="42" Margin="0,30,23,0" Stroke="Black" VerticalAlignment="Top" x:Name="twittDot" HorizontalAlignment="Right" Width="42"/>
-        <RichTextBox Background="#FF141414" Opacity=".75" BorderBrush="#FF020000" x:Name="consoleTBox" Margin="10,314,163,11" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace" Foreground="GhostWhite">
+        <RichTextBox Opacity=".75" BorderBrush="#FF020000" x:Name="consoleTBox" Margin="10,314,163,11" Grid.ColumnSpan="2" FontFamily="Lucida Console, Monaco, monospace" Foreground="GhostWhite" Background="#FF141414">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Application Output (scrollable)"/>
@@ -49,12 +49,12 @@
             </FlowDocument>
         </RichTextBox>
         <Label FontFamily="Comic Sans MS" x:Name="label" Content="Twitter Output Log" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top" Foreground="GhostWhite"/>
-        <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" HorizontalAlignment="Left" Margin="39.5,247,0,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Width="177" Foreground="GhostWhite"/>
+        <Label FontSize="10" x:Name="uploadCountLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Photos uploaded: 0" Margin="40,247,23,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Foreground="GhostWhite"/>
         <Rectangle x:Name="imgCntr" Fill="#FF0C83DD" Margin="40,118,23,0" Stroke="Black" Grid.Column="1" Height="104" VerticalAlignment="Top"/>
         <Button x:Name="btnImgNext" Background="#FF0C83DD" Opacity=".75" FontFamily="Comic Sans MS" Content="Next" Grid.Column="1" Margin="0,222,23,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Right" Width="90" Foreground="GhostWhite"/>
         <Button x:Name="btnImgPrev" Background="#FF0C83DD" Opacity=".75" FontFamily="Comic Sans MS" Content="Prev" Grid.Column="1" Margin="40,222,0,0" Height="20" VerticalAlignment="Top" Click="btnImgIndexClick" HorizontalAlignment="Left" Width="90" Foreground="GhostWhite"/>
         <Label  x:Name="twitterLabel" HorizontalContentAlignment="Center" Content="Not logged into twitter yet." FontFamily="Arial Black" Margin="116,43,70,0" VerticalAlignment="Top" Height="29" Foreground="GhostWhite" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="startTCBox" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19" Text="08:00:00">
+        <ComboBox x:Name="startTCBox" SelectedIndex="5" Margin="36,148,10,0" FontSize="10" HorizontalContentAlignment="Center" VerticalAlignment="Top" Height="19">
             <ComboBoxItem Content="05:00:00"/>
             <ComboBoxItem Content="06:00:00"/>
             <ComboBoxItem Content="07:00:00"/>
@@ -67,7 +67,7 @@
             <ComboBoxItem Content="14:00:00"/>
             <ComboBoxItem Content="15:00:00"/>
         </ComboBox>
-        <ComboBox x:Name="endTCBox" Margin="36,188,10,0" FontSize="10" HorizontalContentAlignment="Center"  VerticalAlignment="Top" Height="19" Text="16:00:00">
+        <ComboBox x:Name="endTCBox" SelectedIndex="8"  Margin="36,188,10,0" FontSize="10" HorizontalContentAlignment="Center"  VerticalAlignment="Top" Height="19">
             <ComboBoxItem Content="12:00:00"/>
             <ComboBoxItem Content="13:00:00"/>
             <ComboBoxItem Content="14:00:00"/>
@@ -124,5 +124,6 @@
             </TextBlock>
         </Border>
         <Rectangle Grid.Column="1" Opacity="0" MouseLeftButtonDown="editTwitterLogin_Click" Fill="#FF0C83DD" Height="40" Margin="0,31,19,0" Stroke="Black" VerticalAlignment="Top" HorizontalAlignment="Right" Width="48"/>
+        <Label FontSize="10" x:Name="uploadRemainLabel" HorizontalContentAlignment="Center" FontFamily="Arial Black" Content="Remaining: 0" Margin="40,268,23,0" VerticalAlignment="Top" Height="26" Grid.Column="1" Foreground="GhostWhite"/>
     </Grid>
 </Window>
