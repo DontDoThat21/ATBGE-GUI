@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="Twitter Poster" Height="514.989" Width="422.5" FontFamily="Comic Sans MS" MinWidth="395" MinHeight="492.989">
+        Title="Twitter Poster" Height="514.989" Width="422.5" FontFamily="Comic Sans MS" MinWidth="395" MinHeight="492.989" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="143*"/>

@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Deployment;
+using System.Deployment.Internal;
 using TweetSharp;
 
 namespace ATBGEBot
@@ -763,6 +765,11 @@ namespace ATBGEBot
         {
             TwitterDetails twtrDets = new TwitterDetails();
             twtrDets.Show();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Title = "Twitter Poster 1.0.2.4"; // Should be assembly version... publish version...
         }
 
         //private void GetImagesFromUrls(List<string> urlsFromJson)
