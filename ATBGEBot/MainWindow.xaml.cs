@@ -102,7 +102,23 @@ namespace ATBGEBot
                 osBit = 32;
             }
 
-            var result = appAudit.SaveUserData(vars[0], vars[1], vars[2], vars[3], vars[4], major, minor, osBit, vars[5], vars[6], vars[7], environ);
+
+            try
+            {
+                var result = appAudit.SaveUserData(vars[0], vars[1], vars[2], vars[3], vars[4], major, minor, osBit, vars[5], vars[6], vars[7], environ);
+
+            }
+            catch (Exception)
+            {
+
+#if DEBUG
+#else
+                MessageBox.Show("Couldn't audit...", "Couldn't save login attempt. Are you offline?", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                System.Exit();
+#endif
+            } 
+                
+        
         }
 
         private string[] GetAuditParams()

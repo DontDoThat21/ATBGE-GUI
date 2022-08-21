@@ -1,39 +1,171 @@
-﻿<Window x:Class="ATBGEBot.TwitterDetails" MinHeight="456.333" MinWidth="850" MaxHeight="456.333"
+﻿<Window x:Class="ATBGEBot.TwitterDetails" MinHeight="456.333" MinWidth="850"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATBGEBot"
         mc:Ignorable="d"
-        Title="TwitterDetails" Height="456.333" Width="756" Icon="twitter.png">
-    <Grid Margin="0,32,0,0" Height="355" VerticalAlignment="Top">
+        Title="Social logins and credentials" Height="535" Width="756" Icon="twitter.png">
+    <Grid Margin="0,32,0,0" Height="355" Width="auto" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="13*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Rectangle Fill="#FFB6D9F3" Stroke="Black" Grid.ColumnSpan="2" Margin="0,-29,0,319" Height="65" VerticalAlignment="Bottom"/>
-        <Label x:Name="twtrLoginDetsLbl" Content="Twitter Login Details" Margin="10,-9,10,0" HorizontalContentAlignment="Center" Foreground="GhostWhite" Grid.ColumnSpan="2" Height="26" VerticalAlignment="Top"/>
-        <Rectangle Fill="Black" Margin="10,70,10,-25" Stroke="Black" Grid.ColumnSpan="2" Height="310" VerticalAlignment="Top"/>
-        <Label x:Name="twtrApiKeysLabel" FontSize="16" Content="Twitter API Keys" Margin="110,87,111,0" Foreground="GhostWhite" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Height="30" VerticalAlignment="Top"/>
-        <Rectangle Fill="GhostWhite" Margin="110,148,111,0" Stroke="Black" Height="207" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Label x:Name="mandatoryFieldsTwitter_Label" FontSize="16" Content="Mandatory Fields:" Margin="110,148,111,0" HorizontalContentAlignment="Center" Height="29" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="tboxApiKey" Height="23" Margin="338,189,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Grid.ColumnSpan="2" TextChanged="tboxApiKey_TextChanged"/>
-        <TextBox x:Name="tboxApiSecret" Grid.ColumnSpan="2" Height="23" Margin="338,224,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxApiSecret_TextChanged"/>
-        <TextBox x:Name="tboxAccessToken" Grid.ColumnSpan="2" Height="23" Margin="338,260,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessToken_TextChanged"/>
-        <TextBox x:Name="tboxAccessTokenSecret" Grid.ColumnSpan="2" Height="24" Margin="338,296,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessTokenSecret_TextChanged"/>
-        <Border BorderThickness="1" BorderBrush="Black" Margin="166,189,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Height="131">
-            <Grid Height="131" Margin="-5,-5,-6,-5" VerticalAlignment="Top">
-                <Label x:Name="lblApiKey" HorizontalContentAlignment="Center" Content="API Key:" Margin="0,0,0,105"/>
-                <Label x:Name="lblApiSecret" HorizontalContentAlignment="Center" Content="API Secret:" Margin="0,35,0,70"/>
-                <Label x:Name="lblAccessToken" HorizontalContentAlignment="Center" Content="Access Token:" Margin="0,71,0,34"/>
-                <Label x:Name="lblAccessTokenSecret" HorizontalContentAlignment="Center" Content="Access Token Secret:" Margin="0,107,0,-4"/>
-            </Grid>
-        </Border>
-        <Image x:Name="imgStatus" Source="twitter.png" Margin="0,0,153,10" HorizontalAlignment="Right" Width="19" Height="20" VerticalAlignment="Bottom" Grid.Column="1"/>
-        <Button x:Name="btnTestCredentials" Content="Test?" Margin="0,0,192,10" HorizontalAlignment="Right" Width="53" Height="20" VerticalAlignment="Bottom" Click="btnTestCredentials_Click" RenderTransformOrigin="0.742,0.6" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FF0C83DD" Margin="0,0,36,10" Stroke="Black" HorizontalAlignment="Right" Width="210" Height="20" VerticalAlignment="Bottom"/>
-        <Label x:Name="lblSaved" Foreground="GhostWhite" Content="Unchanged." Margin="0,0,104,7" HorizontalAlignment="Right" Width="73" Height="26" VerticalAlignment="Bottom"/>
 
 
+        <TabControl Name="tabs" Width="850" Height="auto" HorizontalAlignment="Center" Margin="0,0,0,-132">
+            <TabItem Header="Twitter">
+                <StackPanel CanVerticallyScroll="True">
+
+
+                    <Grid>
+                        <Rectangle Fill="#FFB6D9F3" Stroke="Black" Height="65" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrLoginDetsLbl" Content="Twitter Login Details" Margin="10,6,10,0" HorizontalContentAlignment="Center" Foreground="GhostWhite" Height="26" VerticalAlignment="Top"/>
+                        <Rectangle Fill="Black" Margin="10,70,10,0" Stroke="Black" Height="382" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrApiKeysLabel" FontSize="16" Content="Twitter API Keys" Margin="110,87,111,0" Foreground="GhostWhite" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Height="30" VerticalAlignment="Top"/>
+                        <Rectangle Fill="GhostWhite" Margin="110,148,111,-49" Stroke="Black" Height="256" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <Label x:Name="mandatoryFieldsTwitter_Label" FontSize="16" Content="Mandatory Fields:" Margin="110,148,111,0" HorizontalContentAlignment="Center" Height="29" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="tboxApiKey" Height="23" Margin="338,189,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Grid.ColumnSpan="2" TextChanged="tboxApiKey_TextChanged"/>
+                        <TextBox x:Name="tboxApiSecret" Grid.ColumnSpan="2" Height="23" Margin="338,224,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxApiSecret_TextChanged"/>
+                        <TextBox x:Name="tboxAccessToken" Grid.ColumnSpan="2" Height="23" Margin="338,260,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessToken_TextChanged"/>
+                        <TextBox x:Name="tboxAccessTokenSecret" Grid.ColumnSpan="2" Height="24" Margin="338,296,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessTokenSecret_TextChanged"/>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="166,189,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Height="166">
+                            <Grid Height="131" Margin="-5,-5,-6,-5" VerticalAlignment="Top">
+                                <Label x:Name="lblApiKey" HorizontalContentAlignment="Center" Content="API Key:" Margin="0,0,0,105"/>
+                                <Label x:Name="lblApiSecret" HorizontalContentAlignment="Center" Content="API Secret:" Margin="0,35,0,70"/>
+                                <Label x:Name="lblAccessToken" HorizontalContentAlignment="Center" Content="Access Token:" Margin="0,71,0,34"/>
+                                <Label x:Name="lblAccessTokenSecret" HorizontalContentAlignment="Center" Content="Access Token Secret:" Margin="0,107,0,-4"/>
+                            </Grid>
+                        </Border>
+                        <Image x:Name="imgStatus" Source="twitter.png" Margin="0,0,437,23" HorizontalAlignment="Right" Width="19" Height="20" VerticalAlignment="Bottom" RenderTransformOrigin="0.526,1.65"/>
+                        <Button x:Name="btnTestCredentials" Content="Test?" Margin="0,0,476,23" HorizontalAlignment="Right" Width="53" Height="20" VerticalAlignment="Bottom" Click="btnTestCredentials_Click" RenderTransformOrigin="0.742,0.6"/>
+                        <Rectangle Fill="#FF0C83DD" Margin="0,0,319,17" Stroke="Black" HorizontalAlignment="Right" Width="210" Height="26" VerticalAlignment="Bottom" MouseDown="Rectangle_MouseDown"/>
+                        <Label x:Name="lblSaved" Foreground="GhostWhite" Content="Unchanged." Margin="0,0,387,17" HorizontalAlignment="Right" Width="73" Height="26" VerticalAlignment="Bottom"/>
+                        
+                    </Grid>
+
+                </StackPanel>                
+                
+            </TabItem>           
+
+
+            <TabItem Header="Facebook">
+
+                <StackPanel CanVerticallyScroll="True">
+
+
+                    <Grid>
+                        <Rectangle Fill="#FFB6D9F3" Stroke="Black" Height="65" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrLoginDetsLbl2" Content="Twitter Login Details" Margin="10,6,10,0" HorizontalContentAlignment="Center" Foreground="GhostWhite" Height="26" VerticalAlignment="Top"/>
+                        <Rectangle Fill="Black" Margin="10,70,10,0" Stroke="Black" Height="382" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrApiKeysLabel2" FontSize="16" Content="Twitter API Keys" Margin="110,87,111,0" Foreground="GhostWhite" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Height="30" VerticalAlignment="Top"/>
+                        <Rectangle Fill="GhostWhite" Margin="110,148,111,-49" Stroke="Black" Height="256" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <Label x:Name="mandatoryFieldsTwitter_Label2" FontSize="16" Content="Mandatory Fields:" Margin="110,148,111,0" HorizontalContentAlignment="Center" Height="29" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="tboxApiKey2" Height="23" Margin="338,189,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Grid.ColumnSpan="2" TextChanged="tboxApiKey_TextChanged"/>
+                        <TextBox x:Name="tboxApiSecret2" Grid.ColumnSpan="2" Height="23" Margin="338,224,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxApiSecret_TextChanged"/>
+                        <TextBox x:Name="tboxAccessToken2" Grid.ColumnSpan="2" Height="23" Margin="338,260,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessToken_TextChanged"/>
+                        <TextBox x:Name="tboxAccessTokenSecret2" Grid.ColumnSpan="2" Height="24" Margin="338,296,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessTokenSecret_TextChanged"/>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="166,189,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Height="166">
+                            <Grid Height="131" Margin="-5,-5,-6,-5" VerticalAlignment="Top">
+                                <Label x:Name="lblApiKey2" HorizontalContentAlignment="Center" Content="API Key:" Margin="0,0,0,105"/>
+                                <Label x:Name="lblApiSecret2" HorizontalContentAlignment="Center" Content="API Secret:" Margin="0,35,0,70"/>
+                                <Label x:Name="lblAccessToken2" HorizontalContentAlignment="Center" Content="Access Token:" Margin="0,71,0,34"/>
+                                <Label x:Name="lblAccessTokenSecret2" HorizontalContentAlignment="Center" Content="Access Token Secret:" Margin="0,107,0,-4"/>
+                            </Grid>
+                        </Border>
+                        <Image x:Name="imgStatus2" Source="twitter.png" Margin="0,0,437,23" HorizontalAlignment="Right" Width="19" Height="20" VerticalAlignment="Bottom" RenderTransformOrigin="0.526,1.65"/>
+                        <Button x:Name="btnTestCredentials2" Content="Test?" Margin="0,0,476,23" HorizontalAlignment="Right" Width="53" Height="20" VerticalAlignment="Bottom" Click="btnTestCredentials_Click" RenderTransformOrigin="0.742,0.6"/>
+                        <Rectangle Fill="#FF0C83DD" Margin="0,0,319,17" Stroke="Black" HorizontalAlignment="Right" Width="210" Height="26" VerticalAlignment="Bottom" MouseDown="Rectangle_MouseDown"/>
+                        <Label x:Name="lblSaved2" Foreground="GhostWhite" Content="Unchanged." Margin="0,0,387,17" HorizontalAlignment="Right" Width="73" Height="26" VerticalAlignment="Bottom"/>
+                        
+                    </Grid>
+
+                </StackPanel>
+
+            </TabItem>         
+            
+            <TabItem Header="Instagram">
+
+                <StackPanel CanVerticallyScroll="True">
+
+
+                    <Grid>
+                        <Rectangle Fill="#FFB6D9F3" Stroke="Black" Height="65" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrLoginDetsLbl3" Content="Twitter Login Details" Margin="10,6,10,0" HorizontalContentAlignment="Center" Foreground="GhostWhite" Height="26" VerticalAlignment="Top"/>
+                        <Rectangle Fill="Black" Margin="10,70,10,0" Stroke="Black" Height="382" VerticalAlignment="Top"/>
+                        <Label x:Name="twtrApiKeysLabel3" FontSize="16" Content="Twitter API Keys" Margin="110,87,111,0" Foreground="GhostWhite" HorizontalContentAlignment="Center" Grid.ColumnSpan="2" Height="30" VerticalAlignment="Top"/>
+                        <Rectangle Fill="GhostWhite" Margin="110,148,111,-49" Stroke="Black" Height="256" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <Label x:Name="mandatoryFieldsTwitter_Label3" FontSize="16" Content="Mandatory Fields:" Margin="110,148,111,0" HorizontalContentAlignment="Center" Height="29" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="tboxApiKey3" Height="23" Margin="338,189,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Grid.ColumnSpan="2" TextChanged="tboxApiKey_TextChanged"/>
+                        <TextBox x:Name="tboxApiSecret3" Grid.ColumnSpan="2" Height="23" Margin="338,224,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxApiSecret_TextChanged"/>
+                        <TextBox x:Name="tboxAccessToken3" Grid.ColumnSpan="2" Height="23" Margin="338,260,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessToken_TextChanged"/>
+                        <TextBox x:Name="tboxAccessTokenSecret3" Grid.ColumnSpan="2" Height="24" Margin="338,296,153,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" TextChanged="tboxAccessTokenSecret_TextChanged"/>
+                        <ListBox x:Name="lboxInstaLinks"  MouseDown="lboxInstaLinks_MouseDown"/>
+                        <Border BorderThickness="1" BorderBrush="Black" Margin="166,189,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Height="166">
+                            <Grid Height="131" Margin="-5,-5,-6,-5" VerticalAlignment="Top">
+                                <Label x:Name="lblApiKey3" HorizontalContentAlignment="Center" Content="API Key:" Margin="0,0,0,105"/>
+                                <Label x:Name="lblApiSecret3" HorizontalContentAlignment="Center" Content="API Secret:" Margin="0,35,0,70"/>
+                                <Label x:Name="lblAccessToken3" HorizontalContentAlignment="Center" Content="Access Token:" Margin="0,71,0,34"/>
+                                <Label x:Name="lblAccessTokenSecret3" HorizontalContentAlignment="Center" Content="Access Token Secret:" Margin="0,107,0,-4"/>
+                                <Label x:Name="lblInstagramProfiles" HorizontalContentAlignment="Center" Content="Configure Instagram Profiles:" Margin="0,107,0,-4"/>
+
+                            </Grid>
+                        </Border>
+                        <Image x:Name="imgStatus3" Source="twitter.png" Margin="0,0,437,23" HorizontalAlignment="Right" Width="19" Height="20" VerticalAlignment="Bottom" RenderTransformOrigin="0.526,1.65"/>
+                        <Button x:Name="btnTestCredentials3" Content="Test?" Margin="0,0,476,23" HorizontalAlignment="Right" Width="53" Height="20" VerticalAlignment="Bottom" Click="btnTestCredentials_Click" RenderTransformOrigin="0.742,0.6"/>
+                        <Rectangle Fill="#FF0C83DD" Margin="0,0,319,17" Stroke="Black" HorizontalAlignment="Right" Width="210" Height="26" VerticalAlignment="Bottom" MouseDown="Rectangle_MouseDown"/>
+                        <Label x:Name="lblSaved3" Foreground="GhostWhite" Content="Unchanged." Margin="0,0,387,17" HorizontalAlignment="Right" Width="73" Height="26" VerticalAlignment="Bottom"/>
+
+
+                    </Grid>
+
+                </StackPanel>
+
+
+            </TabItem>
+            <TabItem Header="Reddit Links">
+                <ListBox x:Name="tboxRedditLink" Grid.ColumnSpan="2" Height="73" Margin="338,331,153,0" VerticalAlignment="Top" KeyDown="tboxRedditLink_KeyDown" MouseDown="tboxRedditLink_MouseDown">
+                    <Button x:Name="btnAddRedditLink" Content="ADD"/>
+                    <Button x:Name="btnDelRedditLink" Content="REMOVE"/>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+        <!--<StackPanel Height="37" Width="142" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,-15,70,0">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF30A1DC" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <Image x:Name="imgTwitter" Source="/Resources/twitter-logo.png" Stretch="Fill" Height="35" Width="48" RenderTransformOrigin="0.5,0.5" MouseDown="imgTwitter_MouseDown" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="imgFacebook" Source="/Resources/facebook-logo.png" Stretch="Fill" Height="35" Width="47" RenderTransformOrigin="0.5,0.5" MouseDown="imgFacebook_MouseDown" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+            <Image x:Name="imgInstagram" Source="/Resources/instagram-logo.png" Stretch="Fill" Height="35" Width="47" RenderTransformOrigin="0.5,0.5" MouseDown="imgInstagram_MouseDown" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </StackPanel>-->
     </Grid>
 </Window>

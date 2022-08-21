@@ -28,12 +28,12 @@ namespace ATBGEBot
             tboxApiSecret.Text = key.GetValue("ApiSecret", "").ToString();
             tboxAccessToken.Text = key.GetValue("AccessToken", "").ToString();
             tboxAccessTokenSecret.Text = key.GetValue("AccessTokenSecret", "").ToString();
-
+            //tboxRedditLink.Text = key.GetValue("RedditLink", "https://www.reddit.com/r/").ToString();
         }
 
         private void btnTestCredentials_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Currently work in progress; sorry.");
+            MessageBox.Show("Currently a work in progress; sorry.");
         }
 
         private void tboxApiKey_TextChanged(object sender, TextChangedEventArgs e)
@@ -59,5 +59,85 @@ namespace ATBGEBot
             RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
             key.SetValue("AccessTokenSecret", tboxAccessTokenSecret.Text);
         }
+
+        private void tboxRedditLink_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key.Equals(Key.Back) || e.Key.Equals(Key.Delete))
+            {
+                MessageBox.Show("Nope!");
+            }
+            else
+            {
+                RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\TwitterPoster");
+            }
+        }
+
+        private void SaveToReg(string key, string value)
+        {
+            const string keyName = "HKEY_CURRENT_USER" + "\\" + "RegistrySetValueExample";
+
+            Registry.SetValue(keyName, key, value);
+        }
+
+        private void SaveRedditLinks()
+        {
+            List<string> redditLinks = new List<string>();
+            foreach (var item in redditLinks)
+            {
+                redditLinks.Add("");
+            }
+        }
+
+        private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tboxApiKey.Text))
+            {
+                SaveToReg("TWITTER_API_KEY", tboxApiKey.Text);
+            }
+            if (!string.IsNullOrEmpty(tboxApiSecret.Text))
+            {
+                SaveToReg("TWITTER_API_SECRET", tboxApiSecret.Text);
+            }
+            if (!string.IsNullOrEmpty(tboxAccessToken.Text))
+            {
+                SaveToReg("TWITTER_ACCESS_TOKEN", tboxAccessToken.Text);
+            }
+            if (!string.IsNullOrEmpty(tboxAccessTokenSecret.Text))
+            {
+                SaveToReg("TWITTER_ACCESS_TOKEN_SECRET", tboxAccessTokenSecret.Text);
+            }
+
+
+            if (true)
+            {
+                SaveRedditLinks();
+            }
+        }
+
+        private void tboxRedditLink_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void imgTwitter_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void imgFacebook_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void imgInstagram_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void lboxInstaLinks_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
+ 

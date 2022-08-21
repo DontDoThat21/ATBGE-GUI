@@ -246,6 +246,11 @@
   <ItemGroup>
     <None Include="Web References\AppAudit\GPJ_AppAudit.disco" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\facebook-logo.png" />
+    <Resource Include="Resources\instagram-logo.png" />
+    <Resource Include="Resources\twitter-logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

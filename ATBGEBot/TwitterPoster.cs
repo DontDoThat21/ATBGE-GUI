@@ -17,23 +17,23 @@ namespace InstagramATBGEBot
 {
     public class TwitterBot
     {
-        private string twtrUsername = "tytr96";
-        private string twtrPassword = "blargNjelly97";        
+        //private string twtrUsername = "tytr96";
+        //private string twtrPassword = "blargNjelly97";        
 
-        private int imageId = 0;
-        private int successUploads = 0;
-        private System.Timers.Timer aTimer;
-        public TwitterService service;
+        //private int imageId = 0;
+        //private int successUploads = 0;
+        //private System.Timers.Timer aTimer;
+        private TwitterService service;
 
-        public int lastSuccessPhotoCount;
-        public int timeBetween;
-        public int imageIndex = 0;
+        private int lastSuccessPhotoCount;
+        private int timeBetween;
+        private int imageIndex = 0;
 
-        public static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day       
-        public List<string> imageList = new List<string>();
-        public static List<Bitmap> photos = new List<Bitmap>();
-        public Rootobject results;
-        public bool twtrLognSuccess = false;
+        private static string redditWorkingUrl = "https://www.reddit.com/r/ATBGE/top/.json?limit="; // 5&t=day       
+        private List<string> imageList = new List<string>();
+        private static List<Bitmap> photos = new List<Bitmap>();
+        private Rootobject results;
+        private bool twtrLognSuccess = false;
 
         static List<Post> posts = new List<Post>();
 
