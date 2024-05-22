@@ -43,15 +43,15 @@ namespace ATBGEBot
         public int whatUploadWereOn = 0;
         public int lastSuccessPhotoCount;
         public int videoOffset = 0;
-        //public string customerKey = "NwhE01jkavtSX5I6gfGmD1Qho";
-        //public string customerSecret = "oUtI7fqxdUf7u2aIGBmxqnPxND2tUrJlKjEG2L9Cc5kb3jii7P";
-        //public string access_token = "3564689114-x8Axjs1PH2Fp2wemIEKWtq6jkmJK65QDUhk214M";
-        //public string access_token_secret = "m1wmP3ZTtlLDrkorFDkHbkgVoI7STFGknCgEWWrfysJ82";
-        
-        public string apiKey = "v1tlVp3XwmZhjKrmc04qRBYbc";
-        public string apiSecret = "IPbslteDjQoGNx5tJS6QNmBvoCoq65Nh2E9TPQBGDLpor1jtUr";
-        public string accessToken = "947618558347022336-OXuymBoyTX3tIwziX8g51tSMtXasV7S";
-        public string accessTokenSecret = "2yojE4I2niAzqdM94vae6MOMIK17XDsXChFcw45iDWRe3";
+        //public string customerKey = "REPLACE ME NULL";
+        //public string customerSecret = "REPLACE ME NULL";
+        //public string access_token = "REPLACE ME INVALID NULL";
+        //public string access_token_secret = "REPLACE ME INVALID NULL";
+
+        public string apiKey = "REPLACE ME NULL";
+        public string apiSecret = "REPLACE ME NULL";
+        public string accessToken = "REPLACE ME INVALID NULL";
+        public string accessTokenSecret = "REPLACE ME INVALID NULL";
 
         public DateTime dayAt;
         public DateTime dayFirstRun;
@@ -59,7 +59,7 @@ namespace ATBGEBot
         public MainWindow()
         {           
             InitializeComponent();
-            AuditThisLogin();
+            //AuditThisLogin(); // removed
             imageIndex = CheckForImage("BOOT");
             //startTCBox.SelectedIndex = 0;
             //endTCBox.SelectedIndex = endTCBox.Items.Count-5;
@@ -76,50 +76,50 @@ namespace ATBGEBot
             }
         }
 
-        private void AuditThisLogin()
-        {
-
-            TwitterPoster.AppAudit.GPJ_AppAudit appAudit = new TwitterPoster.AppAudit.GPJ_AppAudit();
-
-            string[] environ = new string[]
-            {
-                "ENVIRONMENT=PROD",
-                "USERID=TWTRPSTR",
-                "FULLNAME=TWITTER POSTER"
-            };
-            string[] vars = GetAuditParams();
-
-            int major = Environment.OSVersion.Version.Major;
-            int minor = Environment.OSVersion.Version.Minor;
-            bool bitBool = Environment.Is64BitOperatingSystem; int osBit = -1;
-
-            if (bitBool)
-            {
-                osBit = 64;
-            }
-            else
-            {
-                osBit = 32;
-            }
-
-
-            try
-            {
-                var result = appAudit.SaveUserData(vars[0], vars[1], vars[2], vars[3], vars[4], major, minor, osBit, vars[5], vars[6], vars[7], environ);
-
-            }
-            catch (Exception)
-            {
-
-#if DEBUG
-#else
-                MessageBox.Show("Couldn't audit...", "Couldn't save login attempt. Are you offline?", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                System.Exit();
-#endif
-            } 
-                
-        
-        }
+//        private void AuditThisLogin()
+//        {
+//
+//            //TwitterPoster.AppAudit.REMOVED appAudit = new TwitterPoster.AppAudit.REMOVED();
+//
+//            string[] environ = new string[]
+//            {
+//                "ENVIRONMENT=PROD",
+//                "USERID=TWTRPSTR",
+//                "FULLNAME=TWITTER POSTER"
+//            };
+//            string[] vars = GetAuditParams();
+//
+//            int major = Environment.OSVersion.Version.Major;
+//            int minor = Environment.OSVersion.Version.Minor;
+//            bool bitBool = Environment.Is64BitOperatingSystem; int osBit = -1;
+//
+//            if (bitBool)
+//            {
+//                osBit = 64;
+//            }
+//            else
+//            {
+//                osBit = 32;
+//            }
+//
+//
+//            try
+//            {
+//                var result = appAudit.SaveUserData(vars[0], vars[1], vars[2], vars[3], vars[4], major, minor, osBit, vars[5], vars[6], vars[7], environ);
+//
+//            }
+//            catch (Exception)
+//            {
+//
+//#if DEBUG
+//#else
+//                MessageBox.Show("Couldn't audit...", "Couldn't save login attempt. Are you offline?", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+//                System.Exit();
+//#endif
+//            } 
+//                
+//        
+//        }
 
         private string[] GetAuditParams()
         {

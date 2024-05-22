@@ -11,17 +11,17 @@
         <Label x:Name="mainHeader" Content="NOT REALLY SURE WHAT ELSE TO ADD TO THIS GOD TIER APP!" Margin="10,22,10,371" HorizontalContentAlignment="Center" Foreground="GhostWhite"/>
         <Rectangle Fill="Black" Margin="10,70,10,10" Stroke="Black"/>
 
-        <Image x:Name="imageBotLeft" Source="Prescott.png" Stretch="Fill" Margin="10,0,0,10" HorizontalAlignment="Left" Width="66" Height="77" VerticalAlignment="Bottom"/>
-        <Image x:Name="imageTopLeft" Source="Prescott.png" Stretch="Fill" Margin="10,70,0,0" Height="77" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66"/>
-        <Image x:Name="imageTopRight" Source="Prescott.png" Stretch="Fill" Margin="0,70,10,0" Height="77" VerticalAlignment="Top" HorizontalAlignment="Right" Width="66"/>
-        <Image x:Name="imageBotRight" Source="Prescott.png" Stretch="Fill" Margin="0,0,10,10" HorizontalAlignment="Right" Width="66" Height="77" VerticalAlignment="Bottom"/>
-        <Label x:Name="label" FontSize="16" Content="ALL HAIL OUR LORD AND SAVIOR, LE'GOD SYSTEM ADMIN!111! Le'Prescottian!" Margin="110,87,111,301" Foreground="GhostWhite" HorizontalContentAlignment="Center"/>
+        <Image x:Name="imageBotLeft" Source="twitter.png" Stretch="Fill" Margin="10,0,0,10" HorizontalAlignment="Left" Width="66" Height="77" VerticalAlignment="Bottom"/>
+        <Image x:Name="imageTopLeft" Source="twitter.png" Stretch="Fill" Margin="10,70,0,0" Height="77" VerticalAlignment="Top" HorizontalAlignment="Left" Width="66"/>
+        <Image x:Name="imageTopRight" Source="twitter.png" Stretch="Fill" Margin="0,70,10,0" Height="77" VerticalAlignment="Top" HorizontalAlignment="Right" Width="66"/>
+        <Image x:Name="imageBotRight" Source="twitter.png" Stretch="Fill" Margin="0,0,10,10" HorizontalAlignment="Right" Width="66" Height="77" VerticalAlignment="Bottom"/>
+        <Label x:Name="label" FontSize="16" Content="ALL HAIL OUR LORD AND SAVIOR, LE'GOD SYSTEM ADMIN Le'Prescottian!" Margin="110,87,111,301" Foreground="GhostWhite" HorizontalContentAlignment="Center"/>
         <Rectangle Fill="GhostWhite" Margin="110,0,111,59" Stroke="Black" Height="207" VerticalAlignment="Bottom"/>
         <Label x:Name="contentToAdd_Header" FontSize="16" Content="Stuff to add:" Margin="110,0,111,237" HorizontalContentAlignment="Center" Height="29" VerticalAlignment="Bottom"/>
         <RichTextBox x:Name="richTextBox" Margin="110,0,111,59" Height="173" VerticalAlignment="Bottom">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="I got nothing really in mind yet. Definitely some app quirks to fix. Need to investigate both the rectangle drawing unit on photo retrieval, AND the timing issue? Photos seem to upload at the correct time though."/>
+                    <Run Text="Configurable list of Reddit communities. Better code architecture. Minimal API. Move this to .NET Core. Better automated timers for proper automation."/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
