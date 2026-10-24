@@ -179,7 +179,7 @@ namespace ATBGEBot
             {
                 if (imageList.Count < int.Parse(totalPicTBox.Text))
                 {
-                    MessageBox.Show("How the hell did we not download enough images? The bot somehow isn't downloading enough from reddit; please contact a developer. The app will continute to run, but very buggily. This wasn't accounted for, dammit!");
+                    MessageBox.Show("How did we not download enough images? The bot somehow isn't downloading enough from reddit; please contact a developer. The app will continute to run, but very buggily. This wasn't accounted for!");
                 }
                 else
                 {
@@ -577,7 +577,7 @@ namespace ATBGEBot
                         Rectangle child = (Rectangle)stackPanel.Children[1];
                         child.Fill = Brushes.Green;
                         //item.Stroke = Brushes.Green;
-                        // do some magic and bullshit with the panel generated.
+                        // do some magic and stuff with the panel generated.
                         uploadCountLabel.Content = $"Photos uploaded: {imageIndex + 1}";
                         uploadRemainLabel.Content = $"Remaining: {totalRequestedUploads - (imageIndex + 1)}";
                     }                    
